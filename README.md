@@ -56,7 +56,8 @@ src/
 │   └── templates/      # Estructuras de página
 ├── pages/              # Páginas de la aplicación
 ├── hooks/              # Hooks personalizados
-├── types/              # Definiciones de tipos
+├── types/              # Definiciones de tipos TypeScript
+│   └── index.ts        # Todos los tipos del dominio (Usuario, Producto, Venta, etc.)
 ├── features/           # Lógica de negocio por feature
 ├── assets/             # Recursos estáticos
 ├── App.tsx
