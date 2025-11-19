@@ -8,6 +8,7 @@ Una aplicación web moderna para la gestión de tiendas, construida siguiendo la
 - **TypeScript** - Tipado fuerte para mayor robustez y mantenibilidad
 - **Vite** - Herramienta de construcción rápida con HMR
 - **Tailwind CSS v4** - Framework CSS utilitario con variables CSS personalizadas
+- **React Router DOM** - Navegación y enrutamiento
 - **ESLint** - Linting para mantener calidad de código
 
 ## Estilo de Programación
@@ -64,21 +65,47 @@ store-main/
 │   ├── assets/
 │   │   └── react.svg
 │   ├── components/
-│   │   ├── atoms/
+│   │   ├── atoms/           # Componentes básicos (11 componentes)
+│   │   │   ├── Alert.tsx
 │   │   │   ├── Badge.tsx
 │   │   │   ├── Button.tsx
 │   │   │   ├── Card.tsx
-│   │   │   ├── index.ts
-│   │   │   └── Input.tsx
-│   │   ├── molecules/
-│   │   ├── organisms/
-│   │   └── templates/
+│   │   │   ├── Checkbox.tsx
+│   │   │   ├── Icon.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Radio.tsx
+│   │   │   ├── Select.tsx
+│   │   │   ├── Spinner.tsx
+│   │   │   ├── Textarea.tsx
+│   │   │   └── index.ts
+│   │   ├── molecules/       # Componentes compuestos (6 componentes)
+│   │   │   ├── DataTable.tsx
+│   │   │   ├── Dropdown.tsx
+│   │   │   ├── FormField.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   ├── Pagination.tsx
+│   │   │   ├── SearchBar.tsx
+│   │   │   └── index.ts
+│   │   ├── organisms/       # Componentes complejos (3 componentes)
+│   │   │   ├── InventoryTable.tsx
+│   │   │   ├── ProductForm.tsx
+│   │   │   ├── SalesReport.tsx
+│   │   │   └── index.ts
+│   │   └── templates/       # Estructuras de página
+│   │       └── Layout.tsx
+│   ├── contexts/            # Contextos de React
+│   │   └── AuthContext.tsx
 │   ├── features/
 │   ├── hooks/
-│   ├── pages/
-│   └── types/
+│   ├── contexts/            # Contextos de React
+│   │   └── AuthContext.tsx  # Contexto de autenticación
+│   ├── pages/               # Páginas de la aplicación
+│   │   ├── Dashboard.tsx
+│   │   ├── Home.tsx
+│   │   ├── Login.tsx
+│   │   └── Register.tsx
+│   └── types/               # Definiciones TypeScript
 │       ├── index.ts
-│       ├── README.md
 │       ├── api/
 │       │   ├── filters.ts
 │       │   ├── pagination.ts
@@ -201,6 +228,51 @@ const crearProducto = async (datos: CrearProducto): Promise<RespuestaAPI<Product
 };
 ```
 
+## Sistema de Autenticación
+
+La aplicación incluye un sistema completo de autenticación con las siguientes características:
+
+### Funcionalidades
+- **Registro de usuarios** con validación completa
+- **Inicio de sesión** con persistencia de sesión
+- **Protección de rutas** para áreas privadas
+- **Contexto de autenticación** global
+- **Navegación condicional** basada en estado de autenticación
+
+### Rutas de la Aplicación
+- **`/`** - Página de inicio con landing page
+- **`/login`** - Formulario de inicio de sesión
+- **`/register`** - Formulario de registro
+- **`/dashboard`** - Dashboard principal (requiere autenticación)
+- **`/components`** - Demo de componentes (desarrollo)
+
+### Flujo de Autenticación
+```
+🏠 Página de Inicio → 🔐 Login/Registro → ✅ Dashboard
+```
+
+### Contexto de Autenticación
+```typescript
+const { user, login, register, logout, isAuthenticated } = useAuth();
+```
+
+## Componentes del Sistema
+
+### Sistema Atómico Completo
+- **11 Componentes Atómicos**: Base reutilizable (Button, Input, Card, etc.)
+- **6 Componentes Moleculares**: Funcionalidades compuestas (DataTable, Modal, etc.)
+- **3 Organismos**: Interfaces completas (ProductForm, InventoryTable, SalesReport)
+
+### Páginas Implementadas
+- **Home**: Landing page con navegación a auth
+- **Login**: Formulario de autenticación
+- **Register**: Formulario de registro de usuarios
+- **Dashboard**: Panel principal con métricas
+
+### Contextos y Hooks
+- **AuthContext**: Gestión global del estado de autenticación
+- **useAuth**: Hook personalizado para acceder al contexto
+
 ## Reglas del Proyecto
 
 ### Código
@@ -263,6 +335,43 @@ npm run build
 # Linting
 npm run lint
 ```
+
+## Cómo Usar la Aplicación
+
+### Primera Ejecución
+1. **Instala dependencias**: `npm install`
+2. **Ejecuta el servidor**: `npm run dev`
+3. **Visita** `http://localhost:5173`
+
+### Flujo de Usuario
+1. **Página de Inicio** (`/`): Landing page con opciones de login/registro
+2. **Registro** (`/register`): Crea una nueva cuenta
+3. **Login** (`/login`): Inicia sesión con cualquier usuario/contraseña
+4. **Dashboard** (`/dashboard`): Panel principal con funcionalidades
+
+### Autenticación de Prueba
+- **Usuario**: Cualquier texto
+- **Contraseña**: Cualquier texto
+- La aplicación acepta cualquier combinación para facilitar las pruebas
+
+### Navegación
+- Usa los botones en la página de inicio para navegar
+- El dashboard está protegido y requiere autenticación
+- La sesión se mantiene al recargar la página
+
+## Arquitectura del Código
+
+### Diseño Atómico
+```
+Átomos (11) → Moléculas (6) → Organismos (3) → Páginas (4)
+```
+
+### Principios Implementados
+- **Tipado fuerte** en todos los componentes
+- **Separación de responsabilidades** clara
+- **Reutilización** máxima de componentes
+- **Navegación** basada en estado de autenticación
+- **Responsive design** para todos los dispositivos
 
 ## Contribución
 

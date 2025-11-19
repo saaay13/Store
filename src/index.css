@@ -77,14 +77,6 @@
   --color-warning: var(--color-warning);
   --color-error: var(--color-error);
 
-  --spacing-xs: var(--spacing-xs);
-  --spacing-sm: var(--spacing-sm);
-  --spacing-md: var(--spacing-md);
-  --spacing-lg: var(--spacing-lg);
-  --spacing-xl: var(--spacing-xl);
-  --spacing-2xl: var(--spacing-2xl);
-  --spacing-3xl: var(--spacing-3xl);
-
   --border-radius-sm: var(--border-radius-sm);
   --border-radius-md: var(--border-radius-md);
   --border-radius-lg: var(--border-radius-lg);
