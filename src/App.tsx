@@ -1,10 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { CartProvider } from './features/cart';
 import Layout from './components/templates/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import ProductsPage from './pages/ProductsPage';
+import CartPage from './pages/CartPage';
 import { Button, Card, Input, Badge } from './components/atoms';
 
 // Component to show atomic components demo
@@ -190,9 +193,21 @@ const AppRoutes = () => {
           </Layout>
         </ProtectedRoute>
       } />
+      <Route path="/products" element={
+        <ProtectedRoute>
+          <Layout>
+            <ProductsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
       <Route path="/components" element={
         <Layout title="Componentes">
           <ComponentsDemo />
+        </Layout>
+      } />
+      <Route path="/cart" element={
+        <Layout title="Carrito de Compras">
+          <CartPage />
         </Layout>
       } />
     </Routes>
@@ -202,9 +217,11 @@ const AppRoutes = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <CartProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </CartProvider>
     </AuthProvider>
   );
 }

@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
-import { Button } from '../atoms';
+import { Link } from 'react-router-dom';
+import { Button, Badge } from '../atoms';
+import { useCart } from '../../features/cart';
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,6 +10,9 @@ interface LayoutProps {
 }
 
 const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
+  const { cart } = useCart();
+  const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -19,6 +24,16 @@ const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
             </div>
 
             <div className="flex items-center space-x-4">
+              <Link to="/cart" className="relative">
+                <Button variant="secondary" size="sm" className="relative">
+                  🛒
+                  {totalItems > 0 && (
+                    <Badge variant="error" size="sm" className="absolute -top-2 -right-2">
+                      {totalItems}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
               <span className="text-sm text-gray-700">Usuario Demo</span>
               <Button variant="secondary" size="sm">
                 Cerrar Sesión
@@ -36,9 +51,11 @@ const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
               <Button variant="secondary" className="w-full justify-start">
                 🏠 Dashboard
               </Button>
-              <Button variant="secondary" className="w-full justify-start">
-                📦 Productos
-              </Button>
+              <Link to="/products">
+                <Button variant="secondary" className="w-full justify-start">
+                  📦 Productos
+                </Button>
+              </Link>
               <Button variant="secondary" className="w-full justify-start">
                 🛒 Ventas
               </Button>
@@ -48,6 +65,11 @@ const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
               <Button variant="secondary" className="w-full justify-start">
                 👥 Usuarios
               </Button>
+              <Link to="/cart">
+                <Button variant="secondary" className="w-full justify-start">
+                  🛒 Carrito {totalItems > 0 && `(${totalItems})`}
+                </Button>
+              </Link>
               <Button variant="secondary" className="w-full justify-start">
                 ⚙️ Configuración
               </Button>
