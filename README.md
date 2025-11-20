@@ -95,14 +95,27 @@ store-main/
 │   │       └── Layout.tsx
 │   ├── contexts/            # Contextos de React
 │   │   └── AuthContext.tsx
-│   ├── features/
+│   ├── features/            # Features modulares
+│   │   ├── cart/            # Feature del carrito de compras
+│   │   │   ├── AddToCartButton.tsx
+│   │   │   ├── Cart.tsx
+│   │   │   ├── CartContext.tsx
+│   │   │   ├── CartItem.tsx
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   ├── auth/            # Feature de autenticación
+│   │   ├── dashboard/       # Feature del dashboard
+│   │   ├── inventory/       # Feature de inventario
+│   │   ├── purchases/       # Feature de compras
+│   │   ├── sales/           # Feature de ventas
+│   │   └── users/           # Feature de usuarios
 │   ├── hooks/
-│   ├── contexts/            # Contextos de React
-│   │   └── AuthContext.tsx  # Contexto de autenticación
 │   ├── pages/               # Páginas de la aplicación
+│   │   ├── CartPage.tsx     # Página del carrito
 │   │   ├── Dashboard.tsx
 │   │   ├── Home.tsx
 │   │   ├── Login.tsx
+│   │   ├── ProductsPage.tsx # Página de productos
 │   │   └── Register.tsx
 │   └── types/               # Definiciones TypeScript
 │       ├── index.ts
@@ -135,6 +148,53 @@ store-main/
         ├── entidades.md
         ├── operaciones.md
         └── otros.md
+```
+
+## Features Modulares
+
+La aplicación está organizada por features modulares, cada uno encapsulando su propia lógica, componentes y tipos:
+
+### Feature: Carrito de Compras (`src/features/cart/`)
+
+Sistema completo de carrito de compras con las siguientes funcionalidades:
+
+#### Componentes
+- **Cart**: Componente principal que muestra items, total y controles
+- **CartItem**: Item individual con controles de cantidad y eliminación
+- **AddToCartButton**: Botón para agregar productos al carrito
+- **CartContext**: Contexto global para gestión del estado del carrito
+- **useCart**: Hook personalizado para acceder al carrito
+
+#### Funcionalidades
+- Agregar productos al carrito con cantidad específica
+- Modificar cantidades de productos existentes
+- Eliminar productos individuales del carrito
+- Vaciar carrito completo
+- Cálculo automático del total
+- Persistencia del carrito en localStorage
+- Contadores visuales en la navegación
+
+#### Tipos
+```typescript
+interface CartItem {
+  product: Producto;
+  quantity: number;
+}
+
+interface Cart {
+  items: CartItem[];
+  total: number;
+}
+```
+
+#### Uso
+```typescript
+// Agregar producto al carrito
+const { addToCart } = useCart();
+addToCart(producto, 2);
+
+// Acceder al estado del carrito
+const { cart, removeFromCart, clearCart } = useCart();
 ```
 
 ## Modelado de Datos
@@ -244,17 +304,20 @@ La aplicación incluye un sistema completo de autenticación con las siguientes 
 - **`/login`** - Formulario de inicio de sesión
 - **`/register`** - Formulario de registro
 - **`/dashboard`** - Dashboard principal (requiere autenticación)
+- **`/products`** - Catálogo de productos con carrito
+- **`/cart`** - Carrito de compras
 - **`/components`** - Demo de componentes (desarrollo)
 
 ### Flujo de Autenticación
 ```
-🏠 Página de Inicio → 🔐 Login/Registro → ✅ Dashboard
+🏠 Página de Inicio → 🔐 Login/Registro → ✅ Dashboard → 🛒 Productos/Carrito
 ```
 
-### Contexto de Autenticación
-```typescript
-const { user, login, register, logout, isAuthenticated } = useAuth();
-```
+### Contextos y Hooks
+- **AuthContext**: Gestión global del estado de autenticación
+- **CartContext**: Gestión global del estado del carrito de compras
+- **useAuth**: Hook personalizado para acceder a la autenticación
+- **useCart**: Hook personalizado para acceder al carrito
 
 ## Componentes del Sistema
 
@@ -268,10 +331,8 @@ const { user, login, register, logout, isAuthenticated } = useAuth();
 - **Login**: Formulario de autenticación
 - **Register**: Formulario de registro de usuarios
 - **Dashboard**: Panel principal con métricas
-
-### Contextos y Hooks
-- **AuthContext**: Gestión global del estado de autenticación
-- **useAuth**: Hook personalizado para acceder al contexto
+- **ProductsPage**: Catálogo de productos con integración al carrito
+- **CartPage**: Gestión completa del carrito de compras
 
 ## Reglas del Proyecto
 
@@ -348,6 +409,8 @@ npm run lint
 2. **Registro** (`/register`): Crea una nueva cuenta
 3. **Login** (`/login`): Inicia sesión con cualquier usuario/contraseña
 4. **Dashboard** (`/dashboard`): Panel principal con funcionalidades
+5. **Productos** (`/products`): Explora el catálogo y agrega items al carrito
+6. **Carrito** (`/cart`): Gestiona tus productos seleccionados
 
 ### Autenticación de Prueba
 - **Usuario**: Cualquier texto
@@ -356,15 +419,25 @@ npm run lint
 
 ### Navegación
 - Usa los botones en la página de inicio para navegar
-- El dashboard está protegido y requiere autenticación
+- El dashboard, productos y carrito están protegidos y requieren autenticación
 - La sesión se mantiene al recargar la página
+- El contador del carrito se actualiza en tiempo real
 
 ## Arquitectura del Código
 
-### Diseño Atómico
+### Diseño Atómico + Features
 ```
-Átomos (11) → Moléculas (6) → Organismos (3) → Páginas (4)
+Átomos (11) → Moléculas (6) → Organismos (3) → Features (7) → Páginas (6)
 ```
+
+### Features Implementados
+- **auth**: Sistema de autenticación completo
+- **cart**: Carrito de compras con persistencia
+- **dashboard**: Panel de métricas y estadísticas
+- **inventory**: Gestión de inventario
+- **purchases**: Control de compras
+- **sales**: Administración de ventas
+- **users**: Gestión de usuarios
 
 ### Principios Implementados
 - **Tipado fuerte** en todos los componentes
@@ -372,6 +445,7 @@ npm run lint
 - **Reutilización** máxima de componentes
 - **Navegación** basada en estado de autenticación
 - **Responsive design** para todos los dispositivos
+- **Arquitectura modular** por features
 
 ## Contribución
 
@@ -380,3 +454,4 @@ npm run lint
 3. Usar el menor número de librerías posible
 4. Asegurar que el código pase ESLint
 5. Documentar componentes nuevos
+6. Organizar código por features modulares
