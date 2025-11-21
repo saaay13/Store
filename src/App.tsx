@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProductsPage from './pages/ProductsPage';
 import CartPage from './pages/CartPage';
+import { CheckoutWizard } from './features/checkout';
 import { Button, Card, Input, Badge } from './components/atoms';
 
 // Component to show atomic components demo
@@ -208,6 +209,11 @@ const AppRoutes = () => {
       <Route path="/cart" element={
         <Layout title="Carrito de Compras">
           <CartPage />
+        </Layout>
+      } />
+      <Route path="/checkout" element={
+        <Layout title="Checkout">
+          <CheckoutWizard />
         </Layout>
       } />
     </Routes>

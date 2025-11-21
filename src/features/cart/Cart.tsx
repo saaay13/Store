@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import { useCart } from './CartContext';
 import { CartItem } from './CartItem';
 
 export const Cart = () => {
+  const navigate = useNavigate();
   const { cart, clearCart } = useCart();
 
   if (cart.items.length === 0) {
@@ -29,7 +31,10 @@ export const Cart = () => {
         </button>
         <div className="text-right">
           <p className="text-lg font-semibold">Total: Bs. {cart.total.toFixed(2)}</p>
-          <button className="mt-2 px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+          <button
+            onClick={() => navigate('/checkout')}
+            className="mt-2 px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          >
             Proceder al Pago
           </button>
         </div>
