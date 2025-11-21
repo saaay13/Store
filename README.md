@@ -103,6 +103,9 @@ store-main/
 │   │   │   ├── CartItem.tsx
 │   │   │   ├── index.ts
 │   │   │   └── types.ts
+│   │   ├── checkout/        # Feature del proceso de checkout
+│   │   │   ├── CheckoutWizard.tsx
+│   │   │   └── index.ts
 │   │   ├── auth/            # Feature de autenticación
 │   │   ├── dashboard/       # Feature del dashboard
 │   │   ├── inventory/       # Feature de inventario
@@ -195,6 +198,67 @@ addToCart(producto, 2);
 
 // Acceder al estado del carrito
 const { cart, removeFromCart, clearCart } = useCart();
+```
+
+### Feature: Checkout (`src/features/checkout/`)
+
+Sistema completo de proceso de pago multi pasos con formulario wizard, validación completa y procesamiento de ventas.
+
+#### Componentes
+- **CheckoutWizard**: Componente principal que maneja el flujo multi pasos
+- **ShippingStep**: Formulario de información de envío con validación
+- **PaymentStep**: Selección de método de pago con detalles de tarjeta
+- **ReviewStep**: Revisión completa del pedido antes de confirmar
+- **ConfirmationStep**: Pantalla de confirmación y éxito
+
+#### Funcionalidades
+- **Formulario multi pasos** con navegación intuitiva
+- **Validación en tiempo real** de todos los campos
+- **Barra de progreso** visual con porcentaje completado
+- **Selección de métodos de pago** (Efectivo, Tarjeta, Transferencia, QR, Fiado)
+- **Campos condicionales** para detalles de tarjeta de crédito
+- **Revisión completa** del pedido antes de confirmar
+- **Procesamiento simulado** de la venta
+- **Limpieza automática** del carrito tras confirmación exitosa
+
+#### Tipos
+```typescript
+interface ShippingInfo {
+  nombre: string;
+  telefono: string;
+  email: string;
+  direccion: string;
+  ciudad: string;
+  notas?: string;
+}
+
+interface PaymentInfo {
+  metodo_pago_id: number;
+  numero_tarjeta?: string;
+  fecha_expiracion?: string;
+  cvv?: string;
+  nombre_tarjeta?: string;
+}
+
+interface CheckoutData {
+  shipping: ShippingInfo;
+  payment: PaymentInfo;
+  cartItems: CartItem[];
+  total: number;
+}
+```
+
+#### Flujo de Checkout
+1. **Información de Envío**: Recopilación de datos de entrega
+2. **Método de Pago**: Selección y detalles del pago
+3. **Revisión**: Confirmación final del pedido
+4. **Confirmación**: Procesamiento y éxito
+
+#### Uso
+```typescript
+// El checkout se integra automáticamente con el carrito
+// Desde Cart.tsx, el botón "Proceder al Pago" navega a /checkout
+// El CheckoutWizard maneja todo el flujo internamente
 ```
 
 ## Modelado de Datos
@@ -306,6 +370,7 @@ La aplicación incluye un sistema completo de autenticación con las siguientes 
 - **`/dashboard`** - Dashboard principal (requiere autenticación)
 - **`/products`** - Catálogo de productos con carrito
 - **`/cart`** - Carrito de compras
+- **`/checkout`** - Proceso de pago multi pasos
 - **`/components`** - Demo de componentes (desarrollo)
 
 ### Flujo de Autenticación
@@ -333,6 +398,7 @@ La aplicación incluye un sistema completo de autenticación con las siguientes 
 - **Dashboard**: Panel principal con métricas
 - **ProductsPage**: Catálogo de productos con integración al carrito
 - **CartPage**: Gestión completa del carrito de compras
+- **CheckoutWizard**: Proceso de pago multi pasos con validación completa
 
 ## Reglas del Proyecto
 
@@ -411,6 +477,7 @@ npm run lint
 4. **Dashboard** (`/dashboard`): Panel principal con funcionalidades
 5. **Productos** (`/products`): Explora el catálogo y agrega items al carrito
 6. **Carrito** (`/cart`): Gestiona tus productos seleccionados
+7. **Checkout** (`/checkout`): Proceso de pago multi pasos (envío → pago → revisión → confirmación)
 
 ### Autenticación de Prueba
 - **Usuario**: Cualquier texto
@@ -427,12 +494,13 @@ npm run lint
 
 ### Diseño Atómico + Features
 ```
-Átomos (11) → Moléculas (6) → Organismos (3) → Features (7) → Páginas (6)
+Átomos (11) → Moléculas (6) → Organismos (3) → Features (8) → Páginas (6)
 ```
 
 ### Features Implementados
 - **auth**: Sistema de autenticación completo
 - **cart**: Carrito de compras con persistencia
+- **checkout**: Proceso de pago multi pasos con validación
 - **dashboard**: Panel de métricas y estadísticas
 - **inventory**: Gestión de inventario
 - **purchases**: Control de compras
