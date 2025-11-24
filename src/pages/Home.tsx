@@ -1,45 +1,57 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card } from '../components/atoms';
+import { Button, Card, Input } from '../components/atoms';
 import { Icon } from '../components/atoms';
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const features = [
+  const categories = [
+    { name: 'CLÁSICOS', link: '/products?category=clasicos', image: 'libros.png' },
+    { name: 'INFANTILES', link: '/products?category=infantiles', image: 'cuentos.png' },
+    { name: 'JUVENILES', link: '/products?category=juveniles', image: 'vampiros.png' },
+    { name: 'POESÍA', link: '/products?category=poesia', image: 'libros.png' },
+    { name: 'INGLÉS', link: '/products?category=ingles', image: 'cuentos.png' },
+    { name: 'NACIONALES', link: '/products?category=nacionales', image: 'vampiros.png' },
+    { name: 'VARIOS', link: '/products?category=varios', image: 'libros.png' },
+    { name: 'DESCUENTOS', link: '/products?category=descuentos', image: 'cuentos.png' },
+    { name: 'ACCESORIOS LITERARIOS', link: '/products?category=accesorios', image: 'vampiros.png' }
+  ];
+
+  const services = [
     {
-      icon: 'user',
-      title: 'Gestión de Usuarios',
-      description: 'Administra empleados, clientes y proveedores con roles específicos.'
+      icon: '📚',
+      title: 'VENTA DE LIBROS ORIGINALES',
+      description: ''
     },
     {
-      icon: 'settings',
-      title: 'Control de Inventario',
-      description: 'Mantén el stock actualizado con alertas automáticas de productos bajos.'
+      icon: '🇧🇴',
+      title: 'ENVÍOS A TODO EL PAÍS',
+      description: ''
     },
     {
-      icon: 'success',
-      title: 'Ventas Eficientes',
-      description: 'Procesa ventas rápidamente con interfaz intuitiva y métodos de pago múltiples.'
+      icon: '🚚',
+      title: 'ENTREGAS A DOMICILIO',
+      description: ''
     },
     {
-      icon: 'search',
-      title: 'Reportes Detallados',
-      description: 'Obtén insights valiosos con reportes de ventas, inventario y rendimiento.'
+      icon: '📦',
+      title: 'IMPORTACIÓN DE LIBROS A PEDIDO',
+      description: ''
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">S</span>
+                <span className="text-white font-bold text-sm">L</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">Store</span>
+              <span className="text-xl font-bold text-gray-900">Libros</span>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -55,168 +67,139 @@ const Home = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Gestión Inteligente para
-              <span className="text-primary block">Tu Tienda</span>
-            </h1>
+      <section className="bg-primary-50 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            Compra desde cualquier parte de Bolivia
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Recibe tus libros favoritos en la puerta de tu casa
+          </p>
+          <Button size="lg" onClick={() => navigate('/products')}>
+            TIENDA
+          </Button>
+        </div>
+      </section>
 
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Simplifica la administración de tu negocio con un sistema completo de gestión
-              de inventario, ventas y reportes. Diseñado para pequeñas y medianas empresas.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={() => navigate('/register')}>
-                <Icon name="plus" size="sm" className="mr-2" />
-                Comenzar Ahora
-              </Button>
-              <Button variant="secondary" size="lg" onClick={() => navigate('/login')}>
-                <Icon name="user" size="sm" className="mr-2" />
-                Ya tengo cuenta
-              </Button>
-            </div>
-          </div>
-
-          {/* Hero Image/Dashboard Preview */}
-          <div className="mt-16 relative">
-            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-primary-50 p-4 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                      <Icon name="settings" size="md" className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Productos</p>
-                      <p className="text-2xl font-bold text-primary">1,234</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-success-50 p-4 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-success rounded-lg flex items-center justify-center">
-                      <Icon name="success" size="md" className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Ventas Hoy</p>
-                      <p className="text-2xl font-bold text-success">Bs. 2,450</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-warning-50 p-4 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-warning rounded-lg flex items-center justify-center">
-                      <Icon name="warning" size="md" className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Stock Bajo</p>
-                      <p className="text-2xl font-bold text-warning">12</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* Search Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex gap-4">
+            <Input
+              placeholder="Buscar por título, autor o ISBN"
+              className="flex-1"
+            />
+            <Button>
+              <Icon name="search" size="sm" className="mr-2" />
+              Buscar
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      {/* Categories Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Todo lo que necesitas para tu tienda
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Una solución completa que cubre todos los aspectos de la gestión de tu negocio
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Icon name={feature.icon} size="lg" className="text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category, index) => (
+              <div key={index} className="relative group cursor-pointer h-96 overflow-hidden" onClick={() => navigate(category.link)}>
+                <img src={`/img/${category.image}`} alt={category.name} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-primary/70 flex flex-col justify-end items-center p-6">
+                  <Button size="lg" variant="secondary" className="bg-white/90 hover:bg-white text-primary font-semibold">
+                    {category.name}
+                  </Button>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  {feature.description}
-                </p>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-primary">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            ¿Listo para transformar tu tienda?
-          </h2>
-          <p className="text-primary-100 mb-8 text-lg">
-            Únete a cientos de negocios que ya confían en Store para su gestión diaria
-          </p>
+      {/* Featured Products Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Nuestras novedades
+            </h2>
+          </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" onClick={() => navigate('/register')}>
-              Crear Cuenta Gratis
-            </Button>
-            <Button size="lg" variant="secondary" className="bg-white/10 hover:bg-white/20 text-white border-white/20" onClick={() => navigate('/login')}>
-              Iniciar Sesión
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Placeholder products */}
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="relative group cursor-pointer">
+                <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                  <div className="absolute inset-0 bg-primary/70 flex items-center justify-center">
+                    <span className="text-white text-center px-4">
+                      <h3 className="text-lg font-semibold mb-2">
+                        Título del Libro {item}
+                      </h3>
+                      <p className="text-sm mb-4">
+                        Autor del libro
+                      </p>
+                      <p className="text-xl font-bold">
+                        Bs. {(item * 25).toFixed(2)}
+                      </p>
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4 text-center">
+                  <Button size="sm" className="w-full">
+                    Agregar al carrito
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+      {/* Services Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-primary-50">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">S</span>
-                </div>
-                <span className="text-xl font-bold">Store</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="text-center">
+                <div className="text-6xl mb-4">{service.icon}</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {service.title}
+                </h3>
+                {service.description && (
+                  <p className="text-gray-600">
+                    {service.description}
+                  </p>
+                )}
               </div>
-              <p className="text-gray-400 mb-4">
-                La solución completa para la gestión de tu tienda.
-                Simplifica tus operaciones y aumenta tu productividad.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Producto</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Características</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Precios</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Soporte</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Empresa</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Sobre nosotros</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contacto</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Store. Todos los derechos reservados.</p>
+            ))}
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Visit Us Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            Visítanos
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Contamos con los mejores libros originales de literatura universal, latinoamericana, juvenil, infantil y nacional.
+          </p>
+          <Button size="lg" variant="secondary" onClick={() => navigate('/ubicacion')}>
+            UBICACIÓN
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer Info */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-xl font-semibold mb-4">VISÍTANOS</h3>
+          <p className="mb-2">Calle Colombia entre Aurelio Meleán y Julio Arauco #1069</p>
+          <p className="mb-2">Cochabamba - Bolivia</p>
+          <p className="mb-2">Lunes a viernes de 10:00 a 13:00 - 15:00 a 19:00,</p>
+          <p>Sábado de 10:00 a 13:00</p>
+        </div>
+      </section>
     </div>
   );
 };

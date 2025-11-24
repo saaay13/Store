@@ -11,7 +11,7 @@ interface LayoutProps {
 
 const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
   const { cart } = useCart();
-  const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
