@@ -1,13 +1,13 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { Producto } from '../../types/entities/product';
+import type { Libro } from '../../types';
 import type { Cart, CartItem } from './types';
 
 interface CartContextType {
   cart: Cart;
-  addToCart: (product: Producto, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  addToCart: (libro: Libro, quantity?: number) => void;
+  removeFromCart: (libroId: number) => void;
+  updateQuantity: (libroId: number, quantity: number) => void;
   clearCart: () => void;
 }
 
@@ -34,37 +34,37 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   };
 
   const calculateTotal = (items: CartItem[]): number => {
-    return items.reduce((total, item) => total + item.product.precio_venta * item.quantity, 0);
+    return items.reduce((total, item) => total + item.libro.precio_venta * item.quantity, 0);
   };
 
-  const addToCart = (product: Producto, quantity: number = 1) => {
+  const addToCart = (libro: Libro, quantity: number = 1) => {
     const newItems = [...cart.items];
-    const existingItem = newItems.find(item => item.product.producto_id === product.producto_id);
+    const existingItem = newItems.find(item => item.libro.libro_id === libro.libro_id);
 
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      newItems.push({ product, quantity });
+      newItems.push({ libro, quantity });
     }
 
     const newTotal = calculateTotal(newItems);
     saveCart({ items: newItems, total: newTotal });
   };
 
-  const removeFromCart = (productId: number) => {
-    const newItems = cart.items.filter(item => item.product.producto_id !== productId);
+  const removeFromCart = (libroId: number) => {
+    const newItems = cart.items.filter(item => item.libro.libro_id !== libroId);
     const newTotal = calculateTotal(newItems);
     saveCart({ items: newItems, total: newTotal });
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (libroId: number, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(libroId);
       return;
     }
 
     const newItems = cart.items.map(item =>
-      item.product.producto_id === productId ? { ...item, quantity } : item
+      item.libro.libro_id === libroId ? { ...item, quantity } : item
     );
     const newTotal = calculateTotal(newItems);
     saveCart({ items: newItems, total: newTotal });

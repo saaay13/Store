@@ -1,7 +1,7 @@
-import type { Producto } from '../../types/entities/product';
+import type { Libro } from '../../types';
 
 export interface CartItem {
-  product: Producto;
+  libro: Libro;
   quantity: number;
 }
 

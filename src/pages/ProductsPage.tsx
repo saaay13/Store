@@ -1,114 +1,113 @@
-import { Card } from '../components/atoms';
+import { useState } from 'react';
+import { Card, Badge, Spinner } from '../components/atoms';
 import { AddToCartButton } from '../features/cart';
-import type { Producto } from '../types/entities/product';
-
-// Mock products for demonstration
-const mockProducts: Producto[] = [
-  {
-    producto_id: 1,
-    nombre: 'Laptop Dell Inspiron',
-    descripcion: 'Laptop de 15.6" con procesador Intel Core i5, 8GB RAM, 256GB SSD',
-    precio_venta: 4500.00,
-    precio_compra_referencia: 3800.00,
-    stock_actual: 10,
-    unidad_medida: 'unidad',
-    codigo_barras: '1234567890123',
-    categoria_id: 1,
-    categoria: { categoria_id: 1, nombre: 'Electrónicos', descripcion: 'Productos electrónicos' }
-  },
-  {
-    producto_id: 2,
-    nombre: 'Mouse Logitech MX Master',
-    descripcion: 'Mouse inalámbrico ergonómico con batería de larga duración',
-    precio_venta: 350.00,
-    precio_compra_referencia: 280.00,
-    stock_actual: 25,
-    unidad_medida: 'unidad',
-    codigo_barras: '1234567890124',
-    categoria_id: 1,
-    categoria: { categoria_id: 1, nombre: 'Electrónicos', descripcion: 'Productos electrónicos' }
-  },
-  {
-    producto_id: 3,
-    nombre: 'Teclado Mecánico RGB',
-    descripcion: 'Teclado mecánico con switches Cherry MX y iluminación RGB',
-    precio_venta: 450.00,
-    precio_compra_referencia: 350.00,
-    stock_actual: 15,
-    unidad_medida: 'unidad',
-    codigo_barras: '1234567890125',
-    categoria_id: 1,
-    categoria: { categoria_id: 1, nombre: 'Electrónicos', descripcion: 'Productos electrónicos' }
-  },
-  {
-    producto_id: 4,
-    nombre: 'Monitor 24" Full HD',
-    descripcion: 'Monitor LED de 24 pulgadas con resolución Full HD 1080p',
-    precio_venta: 1200.00,
-    precio_compra_referencia: 950.00,
-    stock_actual: 8,
-    unidad_medida: 'unidad',
-    codigo_barras: '1234567890126',
-    categoria_id: 1,
-    categoria: { categoria_id: 1, nombre: 'Electrónicos', descripcion: 'Productos electrónicos' }
-  },
-  {
-    producto_id: 5,
-    nombre: 'Audífonos Sony WH-1000XM4',
-    descripcion: 'Audífonos inalámbricos con cancelación de ruido activa',
-    precio_venta: 1800.00,
-    precio_compra_referencia: 1450.00,
-    stock_actual: 12,
-    unidad_medida: 'unidad',
-    codigo_barras: '1234567890127',
-    categoria_id: 1,
-    categoria: { categoria_id: 1, nombre: 'Electrónicos', descripcion: 'Productos electrónicos' }
-  },
-  {
-    producto_id: 6,
-    nombre: 'Disco Duro Externo 1TB',
-    descripcion: 'Disco duro externo USB 3.0 de 1TB para respaldo de datos',
-    precio_venta: 280.00,
-    precio_compra_referencia: 220.00,
-    stock_actual: 20,
-    unidad_medida: 'unidad',
-    codigo_barras: '1234567890128',
-    categoria_id: 1,
-    categoria: { categoria_id: 1, nombre: 'Electrónicos', descripcion: 'Productos electrónicos' }
-  }
-];
+import { useProducts } from '../contexts/ProductContext';
 
 const ProductsPage = () => {
+  const { products, categories, isLoading, error, getCategoryById } = useProducts();
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+  // Filtrar productos por categoría si hay una seleccionada
+  const filteredProducts = selectedCategory
+    ? products.filter(p => p.categoria_id === selectedCategory)
+    : products;
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-error text-lg">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">Productos</h1>
+        <Badge variant="primary">{filteredProducts.length} productos</Badge>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockProducts.map((product) => (
-          <Card key={product.producto_id} className="p-6 hover:shadow-lg transition-shadow">
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">{product.nombre}</h3>
-                <p className="text-sm text-gray-600 mt-1">{product.descripcion}</p>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl font-bold text-primary">Bs. {product.precio_venta.toFixed(2)}</p>
-                  <p className="text-sm text-gray-500">Stock: {product.stock_actual}</p>
-                </div>
-              </div>
-
-              <AddToCartButton
-                product={product}
-                className="w-full"
-              />
-            </div>
-          </Card>
+      {/* Filtro por categoría */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => setSelectedCategory(null)}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            selectedCategory === null
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Todas
+        </button>
+        {categories.map((category) => (
+          <button
+            key={category.categoria_id}
+            onClick={() => setSelectedCategory(category.categoria_id)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              selectedCategory === category.categoria_id
+                ? 'bg-primary text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {category.nombre}
+          </button>
         ))}
       </div>
+
+      {/* Grid de productos */}
+      {filteredProducts.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">No hay productos disponibles</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProducts.map((product) => {
+            const category = getCategoryById(product.categoria_id);
+            return (
+              <Card key={product.producto_id} className="p-6 hover:shadow-lg transition-shadow">
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900">{product.nombre}</h3>
+                      {category && (
+                        <Badge variant="secondary" size="sm">
+                          {category.nombre}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{product.descripcion}</p>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-2xl font-bold text-primary">
+                        ${product.precio_venta.toFixed(2)}
+                      </p>
+                      <p className={`text-sm ${product.stock_actual > 10 ? 'text-gray-500' : 'text-warning'}`}>
+                        Stock: {product.stock_actual} {product.unidad_medida}
+                      </p>
+                    </div>
+                  </div>
+
+                  <AddToCartButton
+                    product={product}
+                    className="w-full"
+                    disabled={product.stock_actual === 0}
+                  />
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

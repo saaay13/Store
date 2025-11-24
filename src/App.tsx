@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { TiendaProvider } from './contexts/TiendaContext';
 import { CartProvider } from './features/cart';
 import Layout from './components/templates/Layout';
 import Home from './pages/Home';
@@ -223,11 +224,13 @@ const AppRoutes = () => {
 function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </CartProvider>
+      <TiendaProvider>
+        <CartProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </CartProvider>
+      </TiendaProvider>
     </AuthProvider>
   );
 }

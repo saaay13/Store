@@ -2,7 +2,7 @@
 
 import type { Usuario } from './user';
 import type { MetodoPago } from './payment-method';
-import type { Producto } from './product';
+import type { Libro } from './book';
 
 export interface Venta {
   venta_id: number;
@@ -20,11 +20,13 @@ export interface Venta {
 export interface DetalleVenta {
   detalle_venta_id: number;
   venta_id: number;
-  producto_id: number;
+  libro_id: number; // ID del libro vendido
+  producto_id: number; // Alias para compatibilidad (mismo que libro_id)
   cantidad: number;
   precio_unitario: number;
   subtotal: number;
-  producto?: Producto; // Relación opcional
+  libro?: Libro; // Relación opcional
+  producto?: Libro; // Alias para compatibilidad
 }
 
 export interface CrearVenta {
@@ -35,7 +37,8 @@ export interface CrearVenta {
 }
 
 export interface CrearDetalleVenta {
-  producto_id: number;
+  libro_id?: number; // Preferir este
+  producto_id?: number; // Alias para compatibilidad
   cantidad: number;
   precio_unitario: number;
 }

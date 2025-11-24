@@ -1,17 +1,31 @@
 // ==================== FILTROS PARA BÚSQUEDAS ====================
 
-import type { Producto } from '../entities/product';
+import type { FormatoLibro, IdiomaLibro, EstadoLibro } from '../entities/book';
 import type { Venta } from '../entities/sale';
 import type { Compra } from '../entities/purchase';
+import type { GeneroLiterario } from '../entities/category';
 
-export interface FiltroProductos {
-  nombre?: string;
+// Filtro para productos (libros)
+export interface FiltroLibros {
+  titulo?: string;
+  isbn?: string;
+  autor_id?: number;
+  editorial_id?: number;
   categoria_id?: number;
+  genero?: GeneroLiterario;
+  formato?: FormatoLibro;
+  idioma?: IdiomaLibro;
+  estado?: EstadoLibro;
+  año_desde?: number;
+  año_hasta?: number;
   precio_min?: number;
   precio_max?: number;
   stock_min?: number;
   stock_max?: number;
 }
+
+// Alias para compatibilidad
+export type FiltroProductos = FiltroLibros;
 
 export interface FiltroVentas {
   fecha_desde?: Date;

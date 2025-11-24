@@ -2,7 +2,7 @@
 
 import type { Proveedor } from './supplier';
 import type { Usuario } from './user';
-import type { Producto } from './product';
+import type { Libro } from './book';
 
 export interface Compra {
   compra_id: number;
@@ -18,11 +18,13 @@ export interface Compra {
 export interface DetalleCompra {
   detalle_compra_id: number;
   compra_id: number;
-  producto_id: number;
+  libro_id: number; // ID del libro comprado
+  producto_id: number; // Alias para compatibilidad (mismo que libro_id)
   cantidad: number;
   costo_unitario: number;
   subtotal: number;
-  producto?: Producto; // Relación opcional
+  libro?: Libro; // Relación opcional
+  producto?: Libro; // Alias para compatibilidad
 }
 
 export interface CrearCompra {
@@ -32,7 +34,8 @@ export interface CrearCompra {
 }
 
 export interface CrearDetalleCompra {
-  producto_id: number;
+  libro_id?: number; // Preferir este
+  producto_id?: number; // Alias para compatibilidad
   cantidad: number;
   costo_unitario: number;
 }

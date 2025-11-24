@@ -21,12 +21,19 @@ export interface ReglasValidacion {
 
 // ==================== VALIDADORES POR TIPO ====================
 
-export interface ValidadorProducto {
-  nombre: ReglasValidacion;
+export interface ValidadorLibro {
+  isbn: ReglasValidacion;
+  titulo: ReglasValidacion;
+  autor_id: ReglasValidacion;
+  editorial_id: ReglasValidacion;
   precio_venta: ReglasValidacion;
   stock_actual: ReglasValidacion;
-  codigo_barras: ReglasValidacion;
+  año_publicacion: ReglasValidacion;
+  num_paginas: ReglasValidacion;
 }
+
+// Alias para compatibilidad
+export type ValidadorProducto = ValidadorLibro;
 
 export interface ValidadorUsuario {
   nombre: ReglasValidacion;

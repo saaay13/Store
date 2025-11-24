@@ -1,0 +1,42 @@
+[
+  {
+    "categoria_id": 1,
+    "nombre": "Electrónica",
+    "descripcion": "Dispositivos electrónicos y accesorios"
+  },
+  {
+    "categoria_id": 2,
+    "nombre": "Ropa",
+    "descripcion": "Prendas de vestir y accesorios de moda"
+  },
+  {
+    "categoria_id": 3,
+    "nombre": "Alimentos",
+    "descripcion": "Productos alimenticios y bebidas"
+  },
+  {
+    "categoria_id": 4,
+    "nombre": "Hogar",
+    "descripcion": "Artículos para el hogar y decoración"
+  },
+  {
+    "categoria_id": 5,
+    "nombre": "Deportes",
+    "descripcion": "Equipamiento y ropa deportiva"
+  },
+  {
+    "categoria_id": 6,
+    "nombre": "Libros",
+    "descripcion": "Libros, revistas y material educativo"
+  },
+  {
+    "categoria_id": 7,
+    "nombre": "Juguetes",
+    "descripcion": "Juguetes y entretenimiento infantil"
+  },
+  {
+    "categoria_id": 8,
+    "nombre": "Belleza",
+    "descripcion": "Productos de cuidado personal y belleza"
+  }
+]

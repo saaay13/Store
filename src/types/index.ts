@@ -12,13 +12,21 @@ export type {
   Categoria,
   CrearCategoria,
   ActualizarCategoria,
+  GeneroLiterario,
 } from './entities/category';
 
 export type {
-  Producto,
-  CrearProducto,
-  ActualizarProducto,
-} from './entities/product';
+  Autor,
+  CrearAutor,
+  ActualizarAutor,
+} from './entities/author';
+
+export type {
+  Libro,
+  CrearLibro,
+  ActualizarLibro,
+  EstadoLibro,
+} from './entities/book';
 
 export type {
   Proveedor,
@@ -59,7 +67,7 @@ export type {
 } from './api/responses';
 
 export type {
-  FiltroProductos,
+  FiltroLibros,
   FiltroVentas,
   FiltroCompras,
 } from './api/filters';
@@ -88,7 +96,7 @@ export type {
   ErrorValidacion,
   ResultadoValidacion,
   ReglasValidacion,
-  ValidadorProducto,
+  ValidadorLibro,
   ValidadorUsuario,
   ValidadorVenta,
 } from './validation';
