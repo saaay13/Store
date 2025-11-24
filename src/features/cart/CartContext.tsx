@@ -24,7 +24,19 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     // Load cart from localStorage
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
-      setCart(JSON.parse(storedCart));
+      try {
+        const parsedCart = JSON.parse(storedCart);
+        // Ensure items is always an array
+        if (parsedCart && Array.isArray(parsedCart.items)) {
+          setCart(parsedCart);
+        } else {
+          // Reset to default if invalid
+          setCart({ items: [], total: 0 });
+        }
+      } catch (error) {
+        // Reset to default if parsing fails
+        setCart({ items: [], total: 0 });
+      }
     }
   }, []);
 
