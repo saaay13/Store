@@ -1,7 +1,7 @@
 import { useState, type MouseEvent } from "react";
 import type { Book } from "../../types";
 import { Badge } from "../atoms";
-import { AddToCartButton } from "../../features/cart";
+import { AddToCartButton, useCart } from "../../features/cart";
 import { ShoppingCart, BookOpen } from "lucide-react";
 
 interface BookCardProps {
@@ -97,6 +97,17 @@ export const BookCardVariant2 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (book.stock === 0 || isAdding) return;
+    setIsAdding(true);
+    addToCart(book, 1);
+    setTimeout(() => setIsAdding(false), 500);
+  };
+
   return (
     <div className="group relative cursor-pointer">
       {/* Card con borde y sombra */}
@@ -135,7 +146,7 @@ export const BookCardVariant2 = ({
           className="absolute bottom-0 left-0 right-0 pt-12 pb-3 px-4 transition-all duration-300 group-hover:pb-6 group-hover:pt-20"
           style={{
             background:
-              "linear-gradient(to top, rgb(45, 80, 22) 0%, rgba(45, 80, 22, 0.85) 15%, rgba(45, 80, 22, 0.6) 30%, rgba(45, 80, 22, 0.35) 45%, rgba(45, 80, 22, 0.15) 60%, rgba(45, 80, 22, 0.05) 75%, transparent 100%)",
+              "linear-gradient(to top, color-mix(in srgb, var(--primary) 100%, transparent 0%) 0%, color-mix(in srgb, var(--primary) 85%, transparent 15%) 15%, color-mix(in srgb, var(--primary) 60%, transparent 40%) 30%, color-mix(in srgb, var(--primary) 35%, transparent 65%) 45%, color-mix(in srgb, var(--primary) 15%, transparent 85%) 60%, color-mix(in srgb, var(--primary) 5%, transparent 95%) 75%, transparent 100%)",
           }}
         >
           <h3 className="text-white font-semibold text-sm line-clamp-2 leading-tight mb-1">
@@ -148,10 +159,17 @@ export const BookCardVariant2 = ({
 
         {/* FAB (Floating Action Button) que aparece en hover */}
         <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-          <AddToCartButton
-            book={book}
-            className="w-12 h-12 rounded-full bg-white text-primary border-2 border-primary shadow-lg hover:bg-primary hover:text-white hover:scale-110 transition-all duration-200 flex items-center justify-center"
-          />
+          <button
+            className="w-12 h-12 rounded-full bg-white text-primary border-2 border-primary shadow-lg hover:bg-primary hover:text-white hover:scale-110 transition-all duration-200 flex items-center justify-center disabled:bg-gray-200 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
+            onClick={handleAddToCart}
+            disabled={book.stock === 0 || isAdding}
+          >
+            {isAdding ? (
+              <span className="text-xs font-semibold">Agregado</span>
+            ) : (
+              <ShoppingCart size={24} />
+            )}
+          </button>
         </div>
 
         {/* Info adicional que aparece en hover (stock) */}
@@ -177,6 +195,17 @@ export const BookCardVariant3 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (book.stock === 0 || isAdding) return;
+    setIsAdding(true);
+    addToCart(book, 1);
+    setTimeout(() => setIsAdding(false), 500);
+  };
+
   return (
     <div className="group relative cursor-pointer">
       {/* Card limpio sin overlay inicial */}
@@ -233,10 +262,17 @@ export const BookCardVariant3 = ({
             </div>
 
             {/* Boton integrado en el overlay */}
-            <AddToCartButton
-              book={book}
-              className="w-full bg-white text-primary font-semibold py-2.5 rounded-lg hover:bg-white/90 transition-colors"
-            />
+            <button
+              className="w-full bg-white text-primary font-semibold py-2.5 rounded-lg hover:bg-white/90 transition-colors disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+              disabled={book.stock === 0 || isAdding}
+              onClick={handleAddToCart}
+            >
+              {book.stock === 0
+                ? "Agotado"
+                : isAdding
+                ? "Agregado"
+                : "Agregar al carrito"}
+            </button>
           </div>
         </div>
       </div>
@@ -251,6 +287,17 @@ export const BookCardVariant4 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (book.stock === 0 || isAdding) return;
+    setIsAdding(true);
+    addToCart(book, 1);
+    setTimeout(() => setIsAdding(false), 500);
+  };
+
   return (
     <div className="group cursor-pointer">
       {/* Contenedor con padding para simular marco */}
@@ -311,17 +358,23 @@ export const BookCardVariant4 = ({
           </div>
 
           {/* Boton que cambia en hover */}
-          <div className="group-hover:hidden">
-            <span className="block w-full py-2 rounded-lg font-medium text-sm text-center bg-gray-100 text-gray-700">
-              {book.stock === 0 ? "Agotado" : "Ver detalles"}
+          <button
+            className="w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50
+                       bg-gray-100 text-gray-700 group-hover:bg-primary group-hover:text-white"
+            disabled={book.stock === 0 || isAdding}
+            onClick={handleAddToCart}
+          >
+            <span className="group-hover:hidden">
+              {book.stock === 0 ? "Agotado" : isAdding ? "Agregado" : "Ver detalles"}
             </span>
-          </div>
-          <div className="hidden group-hover:block">
-            <AddToCartButton
-              book={book}
-              className="w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 bg-primary text-white hover:bg-primary/90"
-            />
-          </div>
+            <span className="hidden group-hover:inline">
+              {book.stock === 0
+                ? "Sin stock"
+                : isAdding
+                ? "Agregado"
+                : "Agregar al carrito"}
+            </span>
+          </button>
         </div>
       </div>
     </div>

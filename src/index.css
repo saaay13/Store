@@ -7,17 +7,36 @@
    ============================================ */
 :root {
   /* Paleta Principal - Actualmente verde, pero puede cambiar a cualquier color */
-  --primary-50: #f0f8f0;
-  --primary-100: #d4edda;
-  --primary-200: #a8d5ba;
-  --primary-300: #81c784;
-  --primary-400: #689f38;
-  --primary-500: #4a7c2a;
-  --primary-600: #2d5016;
-  --primary-700: #1b3a1f;
-  --primary-800: #0d1b0f;
-  --primary-900: #051009;
-  --primary-950: #020503;
+
+
+  --primary-50: #fbeaea;
+  --primary-100: #f8d5d5;
+  --primary-200: #f2a9a9;
+  --primary-300: #ed7878;
+  --primary-400: #ea3c3c;
+  --primary-500: #b52c2c;
+  --primary-600: #831d1d;
+  --primary-700: #550f0f;
+  --primary-800: #290404;
+  --primary-900: #1e0202;
+  --color-primary-950: #0e0101;
+
+
+  
+  /*
+  --blue-50: #eff6ff;
+--blue-100: #dbeafe;
+--blue-200: #bfdbfe;
+--blue-300: #93c5fd;
+--blue-400: #60a5fa;
+--blue-500: #3b82f6;
+--blue-600: #2563eb;
+--blue-700: #1d4ed8;
+--blue-800: #1e40af;
+--blue-900: #1e3a8a;
+--blue-950: #172554;
+
+  */
 
   /* Paleta Secundaria - Grises/Azulados */
   --secondary-50: #f8fafc;
