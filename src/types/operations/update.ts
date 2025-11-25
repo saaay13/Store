@@ -1,6 +1,8 @@
-// ==================== TIPOS PARA ACTUALIZACIÓN ====================
+// ==================== UPDATE TYPES ====================
 
-export type { ActualizarCategoria } from "../entities/category";
-export type { ActualizarProveedor } from "../entities/supplier";
-export type { ActualizarUsuario } from "../entities/user";
-export type { ActualizarMetodoPago } from "../entities/payment-method";
+export type { UpdateCategory } from "../entities/category";
+export type { UpdateAuthor } from "../entities/author";
+export type { UpdateBook } from "../entities/book";
+export type { UpdateSupplier } from "../entities/supplier";
+export type { UpdateUser } from "../entities/user";
+export type { UpdatePaymentMethod } from "../entities/payment-method";

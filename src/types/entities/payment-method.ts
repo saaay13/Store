@@ -1,16 +1,21 @@
-// ==================== METODO DE PAGO ====================
+// ==================== PAYMENT METHOD ====================
 
-export interface MetodoPago {
-  metodo_pago_id: number;
-  nombre: string; // 'Efectivo', 'Tarjeta', 'QR', 'Transferencia', 'Fiado'
-  descripcion: string;
+export interface PaymentMethod {
+  paymentMethodId: number;
+  name: string; // 'Efectivo', 'Tarjeta', 'QR', 'Transferencia', 'Fiado'
+  description: string;
+
+  // Legacy Spanish keys
+  metodo_pago_id?: number;
+  nombre?: string;
+  descripcion?: string;
 }
 
-export interface CrearMetodoPago {
-  nombre: string;
-  descripcion: string;
+export interface CreatePaymentMethod {
+  name: string;
+  description: string;
 }
 
-export interface ActualizarMetodoPago extends Partial<CrearMetodoPago> {
-  metodo_pago_id: number;
+export interface UpdatePaymentMethod extends Partial<CreatePaymentMethod> {
+  paymentMethodId: number;
 }

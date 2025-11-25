@@ -1,8 +1,8 @@
-import React from 'react';
-import Input from '../atoms/Input';
-import Select from '../atoms/Select';
-import Textarea from '../atoms/Textarea';
-import { Icon } from '../atoms';
+import React from "react";
+import Input from "../atoms/Input";
+import Select from "../atoms/Select";
+import Textarea from "../atoms/Textarea";
+import { Icon } from "../atoms";
 
 interface BaseFormFieldProps {
   label?: string;
@@ -10,23 +10,43 @@ interface BaseFormFieldProps {
   required?: boolean;
   helperText?: string;
   className?: string;
+  /**
+   * Tipo de control a renderizar. Se mantiene compatibilidad con `type="select"|"textarea"`.
+   */
+  fieldType?: "input" | "select" | "textarea";
 }
 
-interface InputFormFieldProps extends BaseFormFieldProps {
-  type?: 'input';
+interface InputFormFieldProps
+  extends BaseFormFieldProps,
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "className" | "type"> {
+  /**
+   * Tipo HTML del input (password, email, number, file, etc.).
+   * Si no se define, usa "text".
+   */
+  inputType?: React.InputHTMLAttributes<HTMLInputElement>["type"];
+  options?: never;
 }
 
-interface SelectFormFieldProps extends BaseFormFieldProps {
-  type: 'select';
+interface SelectFormFieldProps
+  extends BaseFormFieldProps,
+    Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "className"> {
+  fieldType: "select";
   options: Array<{ value: string; label: string }>;
   placeholder?: string;
 }
 
-interface TextareaFormFieldProps extends BaseFormFieldProps {
-  type: 'textarea';
+interface TextareaFormFieldProps
+  extends BaseFormFieldProps,
+    Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "className"> {
+  fieldType: "textarea";
+  options?: never;
 }
 
-type FormFieldProps = InputFormFieldProps | SelectFormFieldProps | TextareaFormFieldProps;
+type FormFieldProps =
+  | InputFormFieldProps
+  | SelectFormFieldProps
+  | TextareaFormFieldProps
+  | (Omit<InputFormFieldProps, "fieldType"> & { type?: string });
 
 const FormField: React.FC<FormFieldProps> = (props) => {
   const {
@@ -34,39 +54,54 @@ const FormField: React.FC<FormFieldProps> = (props) => {
     error,
     required = false,
     helperText,
-    className = '',
-    type = 'input',
+    className = "",
+    fieldType,
+    inputType,
     ...fieldProps
-  } = props;
+  } = props as any;
+
+  const rawType = (props as any).type;
+  const resolvedFieldType: "input" | "select" | "textarea" =
+    fieldType || (rawType === "select" || rawType === "textarea" ? rawType : "input");
+
+  // Si es un input, prioriza inputType; si el caller pasó type="password", etc., se respeta.
+  const resolvedInputType =
+    resolvedFieldType === "input"
+      ? inputType || (rawType && rawType !== "input" ? rawType : "text")
+      : undefined;
 
   const fieldId = `field-${Math.random().toString(36).substr(2, 9)}`;
 
   const renderField = () => {
     const commonProps = {
       id: fieldId,
-      'aria-describedby': error ? `${fieldId}-error` : helperText ? `${fieldId}-helper` : undefined,
-      'aria-invalid': !!error,
+      "aria-describedby": error
+        ? `${fieldId}-error`
+        : helperText
+        ? `${fieldId}-helper`
+        : undefined,
+      "aria-invalid": !!error,
     };
 
-    switch (type) {
-      case 'select':
-        const selectProps = fieldProps as SelectFormFieldProps;
+    switch (resolvedFieldType) {
+      case "select":
+        const selectProps = props as SelectFormFieldProps;
         return (
           <Select
             {...commonProps}
             {...(fieldProps as any)}
             options={selectProps.options}
             placeholder={selectProps.placeholder}
-            variant={error ? 'error' : 'default'}
+            variant={error ? "error" : "default"}
           />
         );
 
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
             {...commonProps}
             {...(fieldProps as any)}
-            variant={error ? 'error' : 'default'}
+            variant={error ? "error" : "default"}
           />
         );
 
@@ -75,7 +110,8 @@ const FormField: React.FC<FormFieldProps> = (props) => {
           <Input
             {...commonProps}
             {...(fieldProps as any)}
-            variant={error ? 'error' : 'default'}
+            type={resolvedInputType}
+            variant={error ? "error" : "default"}
           />
         );
     }
@@ -86,7 +122,7 @@ const FormField: React.FC<FormFieldProps> = (props) => {
       {label && (
         <label
           htmlFor={fieldId}
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-foreground"
         >
           {label}
           {required && <span className="text-error ml-1">*</span>}
@@ -107,10 +143,7 @@ const FormField: React.FC<FormFieldProps> = (props) => {
       )}
 
       {helperText && !error && (
-        <p
-          id={`${fieldId}-helper`}
-          className="text-sm text-gray-500"
-        >
+        <p id={`${fieldId}-helper`} className="text-sm text-muted-foreground">
           {helperText}
         </p>
       )}

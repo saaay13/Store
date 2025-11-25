@@ -1,6 +1,6 @@
-import React from 'react';
-import { Checkbox } from '../atoms';
-import { Icon } from '../atoms';
+import React from "react";
+import { Checkbox } from "../atoms";
+import { Icon } from "../atoms";
 
 interface Column<T> {
   key: keyof T | string;
@@ -20,7 +20,7 @@ interface DataTableProps<T> {
   onRowSelect?: (item: T, selected: boolean) => void;
   onSelectAll?: (selected: boolean) => void;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: "asc" | "desc";
   onSort?: (key: string) => void;
   className?: string;
 }
@@ -29,7 +29,7 @@ function DataTable<T extends Record<string, any>>({
   data,
   columns,
   loading = false,
-  emptyMessage = 'No hay datos disponibles',
+  emptyMessage = "No hay datos disponibles",
   selectable = false,
   selectedRows = [],
   onRowSelect,
@@ -37,10 +37,12 @@ function DataTable<T extends Record<string, any>>({
   sortBy,
   sortOrder,
   onSort,
-  className = ''
+  className = "",
 }: DataTableProps<T>) {
-  const selectedIds = new Set(selectedRows.map(item => item.id));
-  const allSelected = data.length > 0 && data.every(item => selectedIds.has(item.id));
+  const selectedIds = new Set(selectedRows.map((item) => item.id));
+  const allSelected =
+    data.length > 0 && data.every((item) => selectedIds.has(item.id));
+  const containerClasses = `rounded-lg border border-border bg-card text-foreground shadow-sm ${className}`;
 
   const handleSelectAll = () => {
     onSelectAll?.(!allSelected);
@@ -56,10 +58,16 @@ function DataTable<T extends Record<string, any>>({
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center py-12 ${className}`}>
+      <div
+        className={`flex items-center justify-center py-12 ${containerClasses}`}
+      >
         <div className="text-center">
-          <Icon name="loading" size="lg" className="animate-spin text-primary mb-2" />
-          <p className="text-gray-600">Cargando datos...</p>
+          <Icon
+            name="loading"
+            size="lg"
+            className="animate-spin text-primary mb-2"
+          />
+          <p className="text-muted-foreground">Cargando datos...</p>
         </div>
       </div>
     );
@@ -67,34 +75,33 @@ function DataTable<T extends Record<string, any>>({
 
   if (data.length === 0) {
     return (
-      <div className={`text-center py-12 ${className}`}>
-        <Icon name="info" size="lg" className="text-gray-400 mb-2" />
-        <p className="text-gray-600">{emptyMessage}</p>
+      <div className={`text-center py-12 ${containerClasses}`}>
+        <Icon name="info" size="lg" className="text-muted-foreground mb-2" />
+        <p className="text-muted-foreground">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className={`overflow-x-auto ${className}`}>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+    <div className={`overflow-x-auto ${containerClasses}`}>
+      <table className="min-w-full divide-y divide-border">
+        <thead className="bg-muted">
           <tr>
             {selectable && (
               <th className="px-6 py-3 text-left">
-                <Checkbox
-                  checked={allSelected}
-                  onChange={handleSelectAll}
-                />
+                <Checkbox checked={allSelected} onChange={handleSelectAll} />
               </th>
             )}
             {columns.map((column) => (
               <th
                 key={String(column.key)}
-                className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
-                  column.sortable ? 'cursor-pointer hover:bg-gray-100' : ''
+                className={`px-6 py-3 text-left text-sm font-semibold text-foreground uppercase tracking-wider ${
+                  column.sortable ? "cursor-pointer hover:bg-accent/60" : ""
                 }`}
                 style={{ width: column.width }}
-                onClick={() => column.sortable && handleSort(String(column.key))}
+                onClick={() =>
+                  column.sortable && handleSort(String(column.key))
+                }
               >
                 <div className="flex items-center space-x-1">
                   <span>{column.header}</span>
@@ -104,18 +111,18 @@ function DataTable<T extends Record<string, any>>({
                         name="arrowUp"
                         size="xs"
                         className={`${
-                          sortBy === column.key && sortOrder === 'asc'
-                            ? 'text-primary'
-                            : 'text-gray-300'
+                          sortBy === column.key && sortOrder === "asc"
+                            ? "text-primary"
+                            : "text-foreground/60"
                         }`}
                       />
                       <Icon
                         name="arrowDown"
                         size="xs"
                         className={`-mt-1 ${
-                          sortBy === column.key && sortOrder === 'desc'
-                            ? 'text-primary'
-                            : 'text-gray-300'
+                          sortBy === column.key && sortOrder === "desc"
+                            ? "text-primary"
+                            : "text-foreground/60"
                         }`}
                       />
                     </div>
@@ -125,16 +132,16 @@ function DataTable<T extends Record<string, any>>({
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="divide-y divide-border">
           {data.map((item, index) => (
             <tr
               key={item.id || index}
-              className={`hover:bg-gray-50 ${
-                selectedIds.has(item.id) ? 'bg-primary-50' : ''
+              className={`transition-colors hover:bg-accent/20${
+                selectedIds.has(item.id) ? "bg-primary/15" : "bg-card"
               }`}
             >
               {selectable && (
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap ">
                   <Checkbox
                     checked={selectedIds.has(item.id)}
                     onChange={() => handleRowSelect(item)}
@@ -144,12 +151,11 @@ function DataTable<T extends Record<string, any>>({
               {columns.map((column) => (
                 <td
                   key={String(column.key)}
-                  className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                  className="px-6 py-4 whitespace-nowrap text-sm text-card-foreground "
                 >
                   {column.render
                     ? column.render(item[column.key as keyof T], item)
-                    : String(item[column.key as keyof T] || '')
-                  }
+                    : String(item[column.key as keyof T] || "")}
                 </td>
               ))}
             </tr>

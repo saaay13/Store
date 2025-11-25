@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Input, Select } from '../atoms';
 import { Icon } from '../atoms';
 
@@ -40,6 +40,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }));
   };
 
+  // Filtrado en tiempo real mientras se escribe
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      onSearch(query, filterValues);
+    }, 250);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [query, filterValues, onSearch]);
+
   const clearFilters = () => {
     setQuery('');
     setFilterValues({});
@@ -56,7 +65,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           <Icon
             name="search"
             size="md"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
           />
           <Input
             type="text"

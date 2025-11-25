@@ -9,3 +9,4 @@ export { default as Radio } from './Radio';
 export { default as Select } from './Select';
 export { default as Spinner } from './Spinner';
 export { default as Textarea } from './Textarea';
+export { ThemeToggle } from './ThemeToggle';

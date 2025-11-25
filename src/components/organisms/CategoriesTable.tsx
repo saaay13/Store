@@ -3,14 +3,14 @@ import * as LucideIcons from 'lucide-react';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { Button, Card } from '../atoms';
 import { DataTable, SearchBar, Pagination } from '../molecules';
-import type { Categoria } from '../../types';
+import type { Category } from '../../types';
 
 interface CategoriesTableProps {
-  categories: Categoria[];
+  categories: Category[];
   loading?: boolean;
   onCreate: () => void;
-  onEdit: (category: Categoria) => void;
-  onDelete: (category: Categoria) => void;
+  onEdit: (category: Category) => void;
+  onDelete: (category: Category) => void;
 }
 
 const CategoriesTable: React.FC<CategoriesTableProps> = ({
@@ -31,23 +31,25 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
   const renderLucideIcon = (iconName: string, size: number = 20) => {
     const IconComponent = LucideIcons[iconName as keyof typeof LucideIcons];
     if (!IconComponent) {
-      return <span className="text-gray-400">?</span>;
+      return <span className="text-muted-foreground">?</span>;
     }
-    return <IconComponent size={size} className="text-gray-600" />;
+    return <IconComponent size={size} className="text-muted-foreground" />;
   };
 
   // Filtrar categorías
   const filteredCategories = categories.filter(cat => {
+    const name = (cat.name ?? '').toLowerCase();
+    const description = (cat.description ?? '').toLowerCase();
     const matchesSearch =
-      cat.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cat.descripcion.toLowerCase().includes(searchQuery.toLowerCase());
+      name.includes(searchQuery.toLowerCase()) ||
+      description.includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
   // Ordenar categorías
   const sortedCategories = [...filteredCategories].sort((a, b) => {
-    let aValue: any = a[sortBy as keyof Categoria];
-    let bValue: any = b[sortBy as keyof Categoria];
+    let aValue: any = (a as any)[sortBy];
+    let bValue: any = (b as any)[sortBy];
 
     if (typeof aValue === 'string') {
       aValue = aValue.toLowerCase();
@@ -88,10 +90,10 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       key: 'nombre',
       header: 'Nombre',
       sortable: true,
-      render: (value: string, cat: Categoria) => (
+      render: (_: string, cat: Category) => (
         <div className="flex items-center space-x-2">
-          {cat.icono && renderLucideIcon(cat.icono, 20)}
-          <span className="font-medium text-gray-900">{value}</span>
+          {cat.icon && renderLucideIcon(cat.icon, 20)}
+          <span className="font-medium text-foreground">{cat.name}</span>
         </div>
       )
     },
@@ -99,15 +101,15 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       key: 'descripcion',
       header: 'Descripción',
       render: (value: string) => (
-        <span className="text-sm text-gray-600">
-          {value.length > 100 ? `${value.slice(0, 100)}...` : value}
+        <span className="text-sm text-muted-foreground">
+          {value && value.length > 100 ? `${value.slice(0, 100)}...` : value}
         </span>
       )
     },
     {
       key: 'actions',
       header: 'Acciones',
-      render: (_: any, cat: Categoria) => (
+      render: (_: any, cat: Category) => (
         <div className="flex space-x-2">
           <Button
             variant="secondary"
@@ -136,8 +138,8 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Gestión de Categorías</h2>
-          <p className="text-gray-600">Categorías literarias de la librería</p>
+          <h2 className="text-2xl font-bold text-foreground">Gestión de Categorías</h2>
+          <p className="text-muted-foreground">Categorías literarias de la librería</p>
         </div>
         <Button onClick={onCreate}>
           <Plus size={18} className="mr-2" />
@@ -182,7 +184,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       <Card className="p-6">
         <div className="text-center">
           <div className="text-4xl font-bold text-primary mb-2">{categories.length}</div>
-          <div className="text-gray-600">Categorías Registradas</div>
+          <div className="text-muted-foreground">Categorías Registradas</div>
         </div>
       </Card>
     </div>

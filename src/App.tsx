@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './features/auth';
-import { TiendaProvider } from './contexts/TiendaContext';
+import { StoreProvider } from './contexts/StoreContext';
 import { CartProvider } from './features/cart';
 import { UIServiceProvider } from './stores/ui';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/templates/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -234,17 +235,19 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <TiendaProvider>
-        <CartProvider>
-          <UIServiceProvider>
-            <Router>
-              <AppRoutes />
-            </Router>
-          </UIServiceProvider>
-        </CartProvider>
-      </TiendaProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <StoreProvider>
+          <CartProvider>
+            <UIServiceProvider>
+              <Router>
+                <AppRoutes />
+              </Router>
+            </UIServiceProvider>
+          </CartProvider>
+        </StoreProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

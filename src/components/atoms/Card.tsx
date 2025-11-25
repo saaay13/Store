@@ -25,7 +25,7 @@ const Card: React.FC<CardProps> = ({
     lg: 'p-8',
   };
 
-  const classes = `bg-white rounded-lg border border-gray-200 ${shadowClasses[shadow]} ${paddingClasses[padding]} ${className}`;
+  const classes = `bg-card text-card-foreground rounded-lg border border-border ${shadowClasses[shadow]} ${paddingClasses[padding]} ${className}`;
 
   return (
     <div className={classes}>

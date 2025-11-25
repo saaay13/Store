@@ -16,7 +16,7 @@ const Radio: React.FC<RadioProps> = ({
 }) => {
   const inputId = id || `radio-${Math.random().toString(36).substr(2, 9)}`;
 
-  const baseClasses = 'border-gray-300 text-primary focus:ring-primary-500 focus:ring-2 transition-colors';
+  const baseClasses = 'border-input text-primary focus:ring-ring focus:ring-2 transition-colors';
 
   const variantClasses = {
     default: '',
@@ -48,7 +48,7 @@ const Radio: React.FC<RadioProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className={`ml-2 text-gray-700 cursor-pointer ${labelSizeClasses[size]}`}
+          className={`ml-2 text-foreground cursor-pointer ${labelSizeClasses[size]}`}
         >
           {label}
         </label>

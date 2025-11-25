@@ -1,9 +1,10 @@
-// ==================== TIPOS PARA CREACIÓN ====================
+// ==================== CREATE TYPES ====================
 
-export type { CrearCategoria } from '../entities/category';
-export type { CrearLibro } from '../entities/book';
-export type { CrearProveedor } from '../entities/supplier';
-export type { CrearUsuario } from '../entities/user';
-export type { CrearMetodoPago } from '../entities/payment-method';
-export type { CrearVenta, CrearDetalleVenta } from '../entities/sale';
-export type { CrearCompra, CrearDetalleCompra } from '../entities/purchase';
+export type { CreateCategory } from "../entities/category";
+export type { CreateBook } from "../entities/book";
+export type { CreateAuthor } from "../entities/author";
+export type { CreateSupplier } from "../entities/supplier";
+export type { CreateUser } from "../entities/user";
+export type { CreatePaymentMethod } from "../entities/payment-method";
+export type { CreateSale, CreateSaleDetail } from "../entities/sale";
+export type { CreatePurchase, CreatePurchaseDetail } from "../entities/purchase";

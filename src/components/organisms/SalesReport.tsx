@@ -2,12 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { Card, Button } from '../atoms';
 import { DataTable } from '../molecules';
 import { Icon } from '../atoms';
-import type { Venta, Libro, Usuario } from '../../types';
+import type { Sale, Book, User } from '../../types';
 
 interface SalesReportProps {
-  sales: Venta[];
-  products: Libro[];
-  users: Usuario[];
+  sales: Sale[];
+  products: Book[];
+  users: User[];
   loading?: boolean;
 }
 
@@ -47,7 +47,8 @@ const SalesReport: React.FC<SalesReportProps> = ({
 
   const filteredSales = useMemo(() => {
     return sales.filter(sale => {
-      const saleDate = new Date(sale.fecha_hora).toISOString().split('T')[0];
+      const saleDateRaw = sale.datetime ?? sale.fecha_hora;
+      const saleDate = new Date(saleDateRaw ?? new Date()).toISOString().split('T')[0];
       return saleDate >= dateRange.start && saleDate <= dateRange.end;
     });
   }, [sales, dateRange]);
@@ -60,21 +61,24 @@ const SalesReport: React.FC<SalesReportProps> = ({
     // Top products
     const productSales = new Map<number, { quantity: number; revenue: number }>();
     filteredSales.forEach(sale => {
-      sale.detalles?.forEach(detail => {
-        const current = productSales.get(detail.libro_id) || { quantity: 0, revenue: 0 };
-        productSales.set(detail.libro_id, {
-          quantity: current.quantity + detail.cantidad,
-          revenue: current.revenue + (detail.cantidad * detail.precio_unitario)
+      (sale.details ?? sale.detalles)?.forEach(detail => {
+        const bookId = detail.bookId ?? detail.libro_id ?? detail.productId ?? detail.producto_id;
+        const quantity = detail.quantity ?? detail.cantidad ?? 0;
+        const unitPrice = detail.unitPrice ?? detail.precio_unitario ?? 0;
+        const current = productSales.get(bookId ?? 0) || { quantity: 0, revenue: 0 };
+        productSales.set(bookId ?? 0, {
+          quantity: current.quantity + quantity,
+          revenue: current.revenue + quantity * unitPrice
         });
       });
     });
 
     const topProducts = Array.from(productSales.entries())
       .map(([productId, data]) => {
-        const product = products.find(p => p.libro_id === productId);
+        const product = products.find(p => (p.bookId ?? p.libro_id) === productId);
         return {
           productId,
-          productName: product?.titulo || 'Libro desconocido',
+          productName: product?.title ?? product?.titulo ?? 'Libro desconocido',
           quantitySold: data.quantity,
           revenue: data.revenue
         };
@@ -85,7 +89,7 @@ const SalesReport: React.FC<SalesReportProps> = ({
     // Sales by period (daily)
     const salesByPeriod = new Map<string, { sales: number; revenue: number }>();
     filteredSales.forEach(sale => {
-      const date = new Date(sale.fecha_hora).toISOString().split('T')[0];
+      const date = new Date(sale.datetime ?? sale.fecha_hora ?? new Date()).toISOString().split('T')[0];
       const current = salesByPeriod.get(date) || { sales: 0, revenue: 0 };
       salesByPeriod.set(date, {
         sales: current.sales + 1,
@@ -100,8 +104,10 @@ const SalesReport: React.FC<SalesReportProps> = ({
     // Sales by user
     const userSales = new Map<number, { salesCount: number; totalRevenue: number }>();
     filteredSales.forEach(sale => {
-      const current = userSales.get(sale.empleado_id) || { salesCount: 0, totalRevenue: 0 };
-      userSales.set(sale.empleado_id, {
+      const employeeId = sale.employeeId ?? sale.empleado_id;
+      if (employeeId === undefined) return;
+      const current = userSales.get(employeeId) || { salesCount: 0, totalRevenue: 0 };
+      userSales.set(employeeId, {
         salesCount: current.salesCount + 1,
         totalRevenue: current.totalRevenue + sale.total
       });
@@ -109,10 +115,10 @@ const SalesReport: React.FC<SalesReportProps> = ({
 
     const salesByUser = Array.from(userSales.entries())
       .map(([userId, data]) => {
-        const user = users.find(u => u.usuario_id === userId);
+        const user = users.find(u => (u.userId ?? u.usuario_id) === userId);
         return {
           userId,
-          userName: user?.nombre || 'Usuario desconocido',
+          userName: user?.name ?? user?.nombre ?? 'Usuario desconocido',
           ...data
         };
       })

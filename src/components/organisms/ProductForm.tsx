@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import * as LucideIcons from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import { Button, Input, Select, Textarea } from '../atoms';
-import type { Libro, Categoria, EstadoLibro } from '../../types';
+import type { Book, Category, BookStatus, CreateBook } from '../../types';
 
 interface ProductFormProps {
-  product?: Libro;
-  categories: Categoria[];
-  onSubmit: (data: Omit<Libro, 'libro_id' | 'categoria' | 'autor'>) => Promise<void>;
+  product?: Book;
+  categories: Category[];
+  onSubmit: (data: CreateBook) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
 }
@@ -19,20 +21,20 @@ const ProductForm: React.FC<ProductFormProps> = ({
 }) => {
   const [formData, setFormData] = useState({
     isbn: product?.isbn || '',
-    titulo: product?.titulo || '',
-    subtitulo: product?.subtitulo || '',
-    sinopsis: product?.sinopsis || '',
-    autor_id: product?.autor_id || 0,
-    nombre_editorial: product?.nombre_editorial || '',
-    categoria_id: product?.categoria_id || 0,
-    año_publicacion: product?.año_publicacion || new Date().getFullYear(),
-    idioma: product?.idioma || 'Español',
-    num_paginas: product?.num_paginas || 0,
-    formato: product?.formato || 'Tapa blanda',
-    precio_venta: product?.precio_venta || 0,
-    stock_actual: product?.stock_actual || 0,
-    portada_url: product?.portada_url || '',
-    estado: product?.estado || 'disponible' as EstadoLibro
+    titulo: product?.title || product?.titulo || '',
+    subtitulo: product?.subtitle || product?.subtitulo || '',
+    sinopsis: product?.synopsis || product?.sinopsis || '',
+    autor_id: product?.authorId || product?.autor_id || 0,
+    nombre_editorial: product?.publisherName || product?.nombre_editorial || '',
+    categoryId: product?.categoryId || 0,
+    año_publicacion: product?.publicationYear || (product as any)?.año_publicacion || new Date().getFullYear(),
+    idioma: product?.language || product?.idioma || 'Español',
+    num_paginas: product?.pageCount || product?.num_paginas || 0,
+    formato: product?.format || product?.formato || 'Tapa blanda',
+    precio_venta: product?.price || product?.precio_venta || 0,
+    stock_actual: product?.stock || product?.stock_actual || 0,
+    portada_url: product?.coverUrl || product?.portada_url || '',
+    estado: (product?.status as BookStatus) || (product?.estado as BookStatus) || 'disponible'
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -55,8 +57,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
     if (!formData.nombre_editorial.trim()) {
       newErrors.nombre_editorial = 'La editorial es obligatoria';
     }
-    if (!formData.categoria_id || formData.categoria_id === 0) {
-      newErrors.categoria_id = 'Debe seleccionar una categoría';
+    if (!formData.categoryId || formData.categoryId === 0) {
+      newErrors.categoryId = 'Debe seleccionar una categoría';
     }
     if (formData.año_publicacion < 1000 || formData.año_publicacion > new Date().getFullYear() + 1) {
       newErrors.año_publicacion = 'Año de publicación inválido';
@@ -83,7 +85,24 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
 
     try {
-      await onSubmit(formData);
+      const payload: CreateBook = {
+        isbn: formData.isbn,
+        title: formData.titulo,
+        subtitle: formData.subtitulo,
+        synopsis: formData.sinopsis,
+        authorId: formData.autor_id,
+        publisherName: formData.nombre_editorial,
+        categoryId: formData.categoryId,
+        publicationYear: formData.año_publicacion,
+        language: formData.idioma,
+        pageCount: formData.num_paginas,
+        format: formData.formato,
+        price: formData.precio_venta,
+        stock: formData.stock_actual,
+        coverUrl: formData.portada_url,
+        status: formData.estado as BookStatus,
+      };
+      await onSubmit(payload);
     } catch (error) {
       console.error('Error submitting book:', error);
     }
@@ -98,9 +117,19 @@ const ProductForm: React.FC<ProductFormProps> = ({
   };
 
   const categoryOptions = categories.map(cat => ({
-    value: cat.categoria_id.toString(),
-    label: cat.nombre
+    value: (cat.categoryId ?? 0).toString(),
+    label: cat.name
   }));
+
+  const getCategoryIcon = (iconName?: string | null) => {
+    if (!iconName) return BookOpen;
+    const IconComponent = LucideIcons[iconName as keyof typeof LucideIcons];
+    return IconComponent || BookOpen;
+  };
+
+  const selectedCategory = categories.find(
+    (cat) => cat.categoryId === formData.categoryId
+  );
 
   const formatoOptions = [
     { value: 'Tapa dura', label: 'Tapa dura' },
@@ -232,19 +261,38 @@ const ProductForm: React.FC<ProductFormProps> = ({
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Categoría *
-          </label>
-          <Select
-            options={categoryOptions}
-            value={formData.categoria_id.toString()}
-            onChange={(e) => handleChange('categoria_id', parseInt(e.target.value))}
-            placeholder="Seleccionar categoría"
-          />
-          {errors.categoria_id && (
-            <p className="mt-1 text-sm text-red-600">{errors.categoria_id}</p>
-          )}
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Categoría *
+            </label>
+            <Select
+              options={categoryOptions}
+              value={formData.categoryId.toString()}
+              onChange={(e) => handleChange('categoryId', parseInt(e.target.value))}
+              placeholder="Seleccionar categoría"
+            />
+            {errors.categoryId && (
+              <p className="mt-1 text-sm text-red-600">{errors.categoryId}</p>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3 rounded-md border border-border bg-muted/30 px-3 py-2">
+            {(() => {
+              const Icon = getCategoryIcon(selectedCategory?.icon);
+              return <Icon className="h-5 w-5 text-muted-foreground" />;
+            })()}
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-foreground">
+                {selectedCategory?.name || 'Selecciona una categoría'}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {selectedCategory?.description
+                  ? selectedCategory.description
+                  : 'Usamos iconos de la librería (Lucide), no emojis.'}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -20,13 +20,13 @@ const Button: React.FC<ButtonProps> = ({
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantClasses = {
-    primary: 'bg-primary text-white hover:bg-primary-600 focus:ring-primary-500',
-    secondary: 'bg-secondary text-white hover:bg-secondary-600 focus:ring-secondary-500',
-    success: 'bg-success text-white hover:bg-green-600 focus:ring-success',
-    warning: 'bg-warning text-white hover:bg-yellow-600 focus:ring-warning',
-    error: 'bg-error text-white hover:bg-red-600 focus:ring-error',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-    outline: 'bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500',
+    primary: 'bg-primary text-primary-foreground hover:opacity-90 focus:ring-ring',
+    secondary: 'bg-muted text-foreground hover:bg-accent focus:ring-ring',
+    success: 'bg-success text-success-foreground hover:opacity-90 focus:ring-success',
+    warning: 'bg-warning text-warning-foreground hover:opacity-90 focus:ring-warning',
+    error: 'bg-error text-error-foreground hover:opacity-90 focus:ring-error',
+    danger: 'bg-error text-error-foreground hover:opacity-90 focus:ring-error',
+    outline: 'bg-transparent border border-border text-foreground hover:bg-accent focus:ring-ring',
   };
 
   const sizeClasses = {

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Card, Input } from '../components/atoms';
-import { Icon } from '../components/atoms';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { BookOpen, UserPlus, AlertCircle } from 'lucide-react';
+import { Button, Card, Input, ThemeToggle } from '../components/atoms';
 import { useAuth } from '../features/auth';
 
 const Register = () => {
@@ -84,19 +84,27 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-      <Card className="w-full max-w-md p-8">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12 relative">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle size="md" />
+      </div>
+
+      <Card className="w-full max-w-md p-8 bg-card border border-border shadow-lg">
+        {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-            <Icon name="user" size="xl" className="text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Crear Cuenta</h1>
-          <p className="text-gray-600">Únete a Store y comienza a gestionar tu tienda</p>
+          <Link to="/" className="inline-flex items-center justify-center space-x-2 mb-4 hover:opacity-80 transition-opacity">
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+              <BookOpen size={24} className="text-primary-foreground" />
+            </div>
+          </Link>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Crear Cuenta</h1>
+          <p className="text-muted-foreground">Únete a Store y comienza a gestionar tu tienda</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="nombre_usuario" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="nombre_usuario" className="block text-sm font-medium text-foreground mb-2">
               Nombre de Usuario *
             </label>
             <Input
@@ -110,12 +118,15 @@ const Register = () => {
               variant={errors.nombre_usuario ? 'error' : 'default'}
             />
             {errors.nombre_usuario && (
-              <p className="mt-1 text-sm text-red-600">{errors.nombre_usuario}</p>
+              <p className="mt-1 text-sm text-error flex items-center space-x-1">
+                <AlertCircle size={14} />
+                <span>{errors.nombre_usuario}</span>
+              </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="nombre" className="block text-sm font-medium text-foreground mb-2">
               Nombre Completo *
             </label>
             <Input
@@ -129,12 +140,15 @@ const Register = () => {
               variant={errors.nombre ? 'error' : 'default'}
             />
             {errors.nombre && (
-              <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
+              <p className="mt-1 text-sm text-error flex items-center space-x-1">
+                <AlertCircle size={14} />
+                <span>{errors.nombre}</span>
+              </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
               Correo Electrónico *
             </label>
             <Input
@@ -148,12 +162,15 @@ const Register = () => {
               variant={errors.email ? 'error' : 'default'}
             />
             {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              <p className="mt-1 text-sm text-error flex items-center space-x-1">
+                <AlertCircle size={14} />
+                <span>{errors.email}</span>
+              </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
               Contraseña *
             </label>
             <Input
@@ -167,12 +184,15 @@ const Register = () => {
               variant={errors.password ? 'error' : 'default'}
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              <p className="mt-1 text-sm text-error flex items-center space-x-1">
+                <AlertCircle size={14} />
+                <span>{errors.password}</span>
+              </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-2">
               Confirmar Contraseña *
             </label>
             <Input
@@ -186,13 +206,17 @@ const Register = () => {
               variant={errors.confirmPassword ? 'error' : 'default'}
             />
             {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+              <p className="mt-1 text-sm text-error flex items-center space-x-1">
+                <AlertCircle size={14} />
+                <span>{errors.confirmPassword}</span>
+              </p>
             )}
           </div>
 
           {errors.general && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-3">
-              <p className="text-sm text-red-600">{errors.general}</p>
+            <div className="bg-error/10 border border-error rounded-md p-3 flex items-start space-x-2">
+              <AlertCircle size={18} className="text-error mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-error">{errors.general}</p>
             </div>
           )}
 
@@ -202,15 +226,16 @@ const Register = () => {
             className="w-full"
             disabled={loading}
           >
+            <UserPlus size={18} className="mr-2" />
             {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             ¿Ya tienes cuenta?{' '}
             <button
-              className="text-primary hover:text-primary-700 font-medium"
+              className="text-primary hover:underline font-medium"
               onClick={() => navigate('/login')}
             >
               Inicia sesión
@@ -218,8 +243,8 @@ const Register = () => {
           </p>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">
+        <div className="mt-8 pt-6 border-t border-border">
+          <p className="text-xs text-muted-foreground text-center">
             Al crear una cuenta, aceptas nuestros términos de servicio y política de privacidad.
           </p>
         </div>

@@ -1,28 +1,37 @@
-// ==================== USUARIO ====================
+// ==================== USER ====================
 
-export type Rol = "cliente" | "empleado" | "admin" | "proveedor";
+export type Role = "cliente" | "empleado" | "admin" | "proveedor";
 
-export interface Usuario {
-  usuario_id: number;
-  nombre: string;
-  telefono: string;
-  direccion: string;
+export interface User {
+  userId: number;
+  name: string;
+  phone: string;
+  address: string;
   email: string;
-  tipo_usuario: Rol;
-  nombre_usuario: string | null;
-  password_hash: string | null;
+  userType: Role;
+  username: string | null;
+  passwordHash: string | null;
+
+  // Legacy Spanish keys
+  usuario_id?: number;
+  nombre?: string;
+  telefono?: string;
+  direccion?: string;
+  tipo_usuario?: Role;
+  nombre_usuario?: string | null;
+  password_hash?: string | null;
 }
 
-export interface CrearUsuario {
-  nombre: string;
-  telefono: string;
-  direccion: string;
+export interface CreateUser {
+  name: string;
+  phone: string;
+  address: string;
   email: string;
-  tipo_usuario: Rol;
-  nombre_usuario?: string;
-  password_hash?: string;
+  userType: Role;
+  username?: string;
+  passwordHash?: string;
 }
 
-export interface ActualizarUsuario extends Partial<CrearUsuario> {
-  usuario_id: number;
+export interface UpdateUser extends Partial<CreateUser> {
+  userId: number;
 }

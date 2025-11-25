@@ -20,10 +20,10 @@ const Alert: React.FC<AlertProps> = ({
   const baseClasses = 'p-4 rounded-md border-l-4 flex items-start space-x-3';
 
   const variantClasses = {
-    success: 'bg-green-50 border-green-400 text-green-800',
-    warning: 'bg-yellow-50 border-yellow-400 text-yellow-800',
-    error: 'bg-red-50 border-red-400 text-red-800',
-    info: 'bg-blue-50 border-blue-400 text-blue-800',
+    success: 'bg-success/10 border-success text-success-foreground',
+    warning: 'bg-warning/10 border-warning text-warning-foreground',
+    error: 'bg-error/10 border-error text-error-foreground',
+    info: 'bg-info/10 border-info text-info-foreground',
   };
 
   const iconNames = {
@@ -51,7 +51,7 @@ const Alert: React.FC<AlertProps> = ({
           variant="secondary"
           size="sm"
           onClick={onClose}
-          className="flex-shrink-0 p-1 hover:bg-gray-200"
+          className="flex-shrink-0 p-1 hover:bg-accent"
         >
           <Icon name="close" size="sm" />
         </Button>

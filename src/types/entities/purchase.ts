@@ -1,43 +1,57 @@
-// ==================== COMPRA ====================
+// ==================== PURCHASE ====================
 
-import type { Proveedor } from './supplier';
-import type { Usuario } from './user';
-import type { Libro } from './book';
+import type { Supplier } from "./supplier";
+import type { User } from "./user";
+import type { Book } from "./book";
 
-export interface Compra {
-  compra_id: number;
-  fecha_hora: Date;
+export interface Purchase {
+  purchaseId: number;
+  datetime: Date;
   total: number;
-  proveedor_id: number;
-  empleado_id: number;
-  proveedor?: Proveedor; // Relación opcional
-  empleado?: Usuario; // Relación opcional
-  detalles?: DetalleCompra[]; // Relación opcional
+  supplierId: number;
+  employeeId: number;
+  supplier?: Supplier; // optional relation
+  employee?: User; // optional relation
+  details?: PurchaseDetail[]; // optional relation
+
+  // Legacy Spanish keys
+  compra_id?: number;
+  fecha_hora?: Date;
+  proveedor_id?: number;
+  empleado_id?: number;
 }
 
-export interface DetalleCompra {
-  detalle_compra_id: number;
-  compra_id: number;
-  libro_id: number; // ID del libro comprado
-  producto_id: number; // Alias para compatibilidad (mismo que libro_id)
-  cantidad: number;
-  costo_unitario: number;
+export interface PurchaseDetail {
+  purchaseDetailId: number;
+  purchaseId: number;
+  bookId: number; // ID del libro comprado
+  productId: number; // Alias para compatibilidad (mismo que bookId)
+  quantity: number;
+  unitCost: number;
   subtotal: number;
-  libro?: Libro; // Relación opcional
-  producto?: Libro; // Alias para compatibilidad
+  book?: Book; // optional relation
+  product?: Book; // alias for compatibility
+
+  // Legacy Spanish keys
+  detalle_compra_id?: number;
+  compra_id?: number;
+  libro_id?: number;
+  producto_id?: number;
+  cantidad?: number;
+  costo_unitario?: number;
 }
 
-export interface CrearCompra {
-  proveedor_id: number;
-  empleado_id: number;
-  detalles: CrearDetalleCompra[];
+export interface CreatePurchase {
+  supplierId: number;
+  employeeId: number;
+  details: CreatePurchaseDetail[];
 }
 
-export interface CrearDetalleCompra {
-  libro_id?: number; // Preferir este
-  producto_id?: number; // Alias para compatibilidad
-  cantidad: number;
-  costo_unitario: number;
+export interface CreatePurchaseDetail {
+  bookId?: number; // Preferir este
+  productId?: number; // Alias para compatibilidad
+  quantity: number;
+  unitCost: number;
 }
 
-export type EstadoCompra = 'pendiente' | 'recibida' | 'cancelada';
+export type PurchaseStatus = "pendiente" | "recibida" | "cancelada";

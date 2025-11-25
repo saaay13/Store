@@ -1,58 +1,58 @@
-// ==================== EXPORTACIONES ORGANIZADAS ====================
+// ==================== ORGANIZED EXPORTS ====================
 
-// Entidades del dominio
+// Domain entities
 export type {
-  Usuario,
-  Rol,
-  CrearUsuario,
-  ActualizarUsuario,
+  User,
+  Role,
+  CreateUser,
+  UpdateUser,
 } from "./entities/user";
 
 export type {
-  Categoria,
-  CrearCategoria,
-  ActualizarCategoria,
-  GeneroLiterario,
+  Category,
+  CreateCategory,
+  UpdateCategory,
+  LiteraryGenre,
 } from "./entities/category";
 
-export type { Autor, CrearAutor, ActualizarAutor } from "./entities/author";
+export type { Author, CreateAuthor, UpdateAuthor } from "./entities/author";
 
 export type {
-  Libro,
-  CrearLibro,
-  ActualizarLibro,
-  EstadoLibro,
+  Book,
+  CreateBook,
+  UpdateBook,
+  BookStatus,
 } from "./entities/book";
 
 export type {
-  Proveedor,
-  CrearProveedor,
-  ActualizarProveedor,
+  Supplier,
+  CreateSupplier,
+  UpdateSupplier,
 } from "./entities/supplier";
 
 export type {
-  MetodoPago,
-  CrearMetodoPago,
-  ActualizarMetodoPago,
+  PaymentMethod,
+  CreatePaymentMethod,
+  UpdatePaymentMethod,
 } from "./entities/payment-method";
 
 export type {
-  Venta,
-  DetalleVenta,
-  CrearVenta,
-  CrearDetalleVenta,
-  EstadoVenta,
+  Sale,
+  SaleDetail,
+  CreateSale,
+  CreateSaleDetail,
+  SaleStatus,
 } from "./entities/sale";
 
 export type {
-  Compra,
-  DetalleCompra,
-  CrearCompra,
-  CrearDetalleCompra,
-  EstadoCompra,
+  Purchase,
+  PurchaseDetail,
+  CreatePurchase,
+  CreatePurchaseDetail,
+  PurchaseStatus,
 } from "./entities/purchase";
 
-// Operaciones CRUD
+// CRUD operations
 export type * from "./operations/create";
 export type * from "./operations/update";
 
@@ -63,10 +63,10 @@ export type { FiltroLibros, FiltroVentas, FiltroCompras } from "./api/filters";
 
 export type { OpcionesPaginacion, InfoPaginacion } from "./api/pagination";
 
-// Reportes
-export type { ReporteVentas, ReporteInventario } from "./reports";
+// Reports
+export type { SalesReport, InventoryReport } from "./reports";
 
-// Autenticación
+// Authentication
 export type {
   CredencialesLogin,
   TokenUsuario,
@@ -74,7 +74,7 @@ export type {
   CambioPassword,
 } from "./auth";
 
-// Validación
+// Validation
 export type {
   ErrorValidacion,
   ResultadoValidacion,
@@ -84,7 +84,7 @@ export type {
   ValidadorVenta,
 } from "./validation";
 
-// Configuración
+// Configuration
 export type {
   ConfiguracionTienda,
   ConfiguracionSistema,

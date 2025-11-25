@@ -1,20 +1,26 @@
-// ==================== PROVEEDOR ====================
+// ==================== SUPPLIER ====================
 
-export interface Proveedor {
-  proveedor_id: number;
-  nombre: string;
-  telefono: string;
-  direccion: string;
+export interface Supplier {
+  supplierId: number;
+  name: string;
+  phone: string;
+  address: string;
+  email: string;
+
+  // Legacy Spanish keys
+  proveedor_id?: number;
+  nombre?: string;
+  telefono?: string;
+  direccion?: string;
+}
+
+export interface CreateSupplier {
+  name: string;
+  phone: string;
+  address: string;
   email: string;
 }
 
-export interface CrearProveedor {
-  nombre: string;
-  telefono: string;
-  direccion: string;
-  email: string;
-}
-
-export interface ActualizarProveedor extends Partial<CrearProveedor> {
-  proveedor_id: number;
+export interface UpdateSupplier extends Partial<CreateSupplier> {
+  supplierId: number;
 }

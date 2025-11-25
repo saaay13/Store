@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { useTienda } from '../../contexts/TiendaContext';
+import { useStore } from '../../contexts/StoreContext';
 import { useUIService } from '../../stores/ui';
 import { CategoriesTable, CategoryForm } from '../../components/organisms';
 import { Dialog } from '../../components/molecules';
-import type { Categoria, CrearCategoria, ActualizarCategoria } from '../../types';
+import type { Category, CreateCategory, UpdateCategory } from '../../types';
 
 const CategoriesAdminPage: React.FC = () => {
-  const { categorias, crearCategoria, actualizarCategoria, eliminarCategoria } = useTienda();
+  const { categories, createCategory, updateCategory, deleteCategory } = useStore();
   const { toast, confirm } = useUIService();
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Categoria | undefined>();
+  const [editingCategory, setEditingCategory] = useState<Category | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handlers
@@ -20,33 +20,40 @@ const CategoriesAdminPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleEdit = (cat: Categoria) => {
+  const handleEdit = (cat: Category) => {
     setEditingCategory(cat);
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (cat: Categoria) => {
-    confirm.delete(cat.nombre, async () => {
+  const handleDelete = async (cat: Category) => {
+    const displayName = cat.name ?? 'Categoría';
+    const catId = cat.categoryId;
+    confirm.delete(displayName, async () => {
       try {
-        await eliminarCategoria(cat.categoria_id);
-        toast.success(`Categoría "${cat.nombre}" eliminada exitosamente`);
+        if (!catId) throw new Error("ID de categoría no encontrado");
+        await deleteCategory(catId);
+        toast.success(`Categoría "${displayName}" eliminada exitosamente`);
       } catch (error) {
         toast.error('Error al eliminar la categoría');
       }
     });
   };
 
-  const handleSubmit = async (data: CrearCategoria) => {
+  const handleSubmit = async (data: CreateCategory) => {
     setIsSubmitting(true);
     try {
       if (editingCategory) {
-        await actualizarCategoria({
+        const categoryId = editingCategory.categoryId;
+        if (!categoryId) {
+          throw new Error("ID de categoría no encontrado");
+        }
+        await updateCategory({
           ...data,
-          categoria_id: editingCategory.categoria_id
-        } as ActualizarCategoria);
+          categoryId,
+        } as UpdateCategory);
         toast.success('Categoría actualizada exitosamente');
       } else {
-        await crearCategoria(data);
+        await createCategory(data);
         toast.success('Categoría creada exitosamente');
       }
       setIsModalOpen(false);
@@ -66,7 +73,7 @@ const CategoriesAdminPage: React.FC = () => {
   return (
     <>
       <CategoriesTable
-        categories={categorias}
+        categories={categories}
         loading={false}
         onCreate={handleCreate}
         onEdit={handleEdit}

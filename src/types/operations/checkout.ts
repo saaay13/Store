@@ -1,7 +1,7 @@
 // ==================== CHECKOUT ====================
 
-import type { CartItem } from '../../features/cart/types';
-import type { MetodoPago } from '../entities/payment-method';
+import type { CartItem } from "../../features/cart/types";
+import type { PaymentMethod } from "../entities/payment-method";
 
 export interface ShippingInfo {
   nombre: string;
@@ -14,7 +14,8 @@ export interface ShippingInfo {
 
 export interface PaymentInfo {
   metodo_pago_id: number;
-  metodo_pago?: MetodoPago;
+  metodo_pago?: PaymentMethod;
+  paymentMethodId?: number;
   // Para tarjeta de crédito/débito
   numero_tarjeta?: string;
   fecha_expiracion?: string;

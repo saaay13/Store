@@ -14,7 +14,7 @@ const variantConfig: Record<
 > = {
   danger: {
     buttonVariant: 'danger',
-    iconColor: 'text-red-600',
+    iconColor: 'text-error',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -28,7 +28,7 @@ const variantConfig: Record<
   },
   warning: {
     buttonVariant: 'primary',
-    iconColor: 'text-yellow-600',
+    iconColor: 'text-warning',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -42,7 +42,7 @@ const variantConfig: Record<
   },
   info: {
     buttonVariant: 'primary',
-    iconColor: 'text-blue-600',
+    iconColor: 'text-info',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -97,7 +97,7 @@ export function ConfirmDialog() {
         <div className={`flex-shrink-0 ${config.iconColor}`}>
           {config.icon}
         </div>
-        <p className="text-gray-700 dark:text-gray-300 text-sm">{state.message}</p>
+        <p className="text-muted-foreground text-sm">{state.message}</p>
       </div>
     </Dialog>
   );

@@ -9,14 +9,15 @@ const Input: React.FC<InputProps> = ({
   className = '',
   ...props
 }) => {
-  const baseClasses = 'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors';
+  const baseClasses =
+    'w-full px-3 py-2 rounded-md transition-colors bg-background text-foreground placeholder:text-muted-foreground border focus:outline-none focus:ring-2 focus:ring-offset-2';
 
   const variantClasses = {
-    default: 'border-gray-300 focus:border-primary focus:ring-primary-500',
+    default: 'border-input focus:border-ring focus:ring-ring',
     error: 'border-error focus:border-error focus:ring-error',
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${className}`;
+  const classes = `${baseClasses} ${variantClasses[variant]} disabled:opacity-60 disabled:cursor-not-allowed ${className}`;
 
   return (
     <input className={classes} {...props} />

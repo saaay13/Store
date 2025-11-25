@@ -149,53 +149,52 @@
 /* ============================================
    MODO OSCURO
    Variables semánticas que cambian en dark mode
+   Ahora usa clase .dark para permitir toggle manual
    ============================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Colores de la Marca - ajustados para dark mode */
-    --primary: var(--primary-500);
-    --primary-foreground: var(--primary-950);
+.dark {
+  /* Colores de la Marca - ajustados para dark mode */
+  --primary: var(--primary-500);
+  --primary-foreground: var(--primary-950);
 
-    --secondary: var(--secondary-400);
-    --secondary-foreground: var(--secondary-950);
+  --secondary: var(--secondary-400);
+  --secondary-foreground: var(--secondary-950);
 
-    /* Fondos y Textos Principales */
-    --background: var(--neutral-950);
-    --foreground: var(--neutral-50);
+  /* Fondos y Textos Principales */
+  --background: var(--neutral-950);
+  --foreground: var(--neutral-50);
 
-    /* Fondos y Textos Secundarios */
-    --muted: var(--neutral-800);
-    --muted-foreground: var(--neutral-400);
+  /* Fondos y Textos Secundarios */
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
 
-    /* Acentos y Hover States */
-    --accent: var(--neutral-800);
-    --accent-foreground: var(--primary-400);
+  /* Acentos y Hover States */
+  --accent: var(--neutral-800);
+  --accent-foreground: var(--primary-400);
 
-    /* Bordes y Divisores */
-    --border: var(--neutral-800);
-    --input: var(--neutral-800);
-    --ring: var(--primary-500);
+  /* Bordes y Divisores */
+  --border: var(--neutral-800);
+  --input: var(--neutral-800);
+  --ring: var(--primary-500);
 
-    /* Cards y Popups */
-    --card: var(--neutral-900);
-    --card-foreground: var(--neutral-50);
+  /* Cards y Popups */
+  --card: var(--neutral-900);
+  --card-foreground: var(--neutral-50);
 
-    --popover: var(--neutral-900);
-    --popover-foreground: var(--neutral-50);
+  --popover: var(--neutral-900);
+  --popover-foreground: var(--neutral-50);
 
-    /* Estados Semánticos - versiones más brillantes para dark mode */
-    --success: var(--success-dark);
-    --success-foreground: var(--neutral-950);
+  /* Estados Semánticos - versiones más brillantes para dark mode */
+  --success: var(--success-dark);
+  --success-foreground: var(--neutral-950);
 
-    --warning: var(--warning-dark);
-    --warning-foreground: var(--neutral-950);
+  --warning: var(--warning-dark);
+  --warning-foreground: var(--neutral-950);
 
-    --error: var(--error-dark);
-    --error-foreground: var(--neutral-950);
+  --error: var(--error-dark);
+  --error-foreground: var(--neutral-950);
 
-    --info: var(--info-dark);
-    --info-foreground: var(--neutral-950);
-  }
+  --info: var(--info-dark);
+  --info-foreground: var(--neutral-950);
 }
 
 /* ============================================
@@ -313,4 +312,38 @@
   --font-weight-medium: var(--font-weight-medium);
   --font-weight-semibold: var(--font-weight-semibold);
   --font-weight-bold: var(--font-weight-bold);
+}
+
+/* ============================================
+   UTILIDADES PERSONALIZADAS
+   ============================================ */
+@layer utilities {
+  /* Degradado suave para títulos de cards de libros */
+  .gradient-book-title {
+    background: linear-gradient(
+      to top,
+      hsl(var(--color-primary) / 1) 0%,
+      hsl(var(--color-primary) / 0.85) 15%,
+      hsl(var(--color-primary) / 0.6) 30%,
+      hsl(var(--color-primary) / 0.35) 45%,
+      hsl(var(--color-primary) / 0.15) 60%,
+      hsl(var(--color-primary) / 0.05) 75%,
+      transparent 100%
+    );
+  }
+
+  /* Variante expandida para hover */
+  .gradient-book-title-hover {
+    background: linear-gradient(
+      to top,
+      hsl(var(--color-primary) / 1) 0%,
+      hsl(var(--color-primary) / 0.9) 12%,
+      hsl(var(--color-primary) / 0.75) 24%,
+      hsl(var(--color-primary) / 0.55) 36%,
+      hsl(var(--color-primary) / 0.35) 48%,
+      hsl(var(--color-primary) / 0.2) 60%,
+      hsl(var(--color-primary) / 0.08) 72%,
+      transparent 100%
+    );
+  }
 }

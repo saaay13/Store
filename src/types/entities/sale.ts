@@ -1,46 +1,63 @@
-// ==================== VENTA ====================
+// ==================== SALE ====================
 
-import type { Usuario } from './user';
-import type { MetodoPago } from './payment-method';
-import type { Libro } from './book';
+import type { User } from "./user";
+import type { PaymentMethod } from "./payment-method";
+import type { Book } from "./book";
 
-export interface Venta {
-  venta_id: number;
-  fecha_hora: Date;
+export interface Sale {
+  saleId: number;
+  datetime: Date;
   total: number;
-  cliente_id: number;
-  empleado_id: number;
-  metodo_pago_id: number;
-  cliente?: Usuario; // Relación opcional
-  empleado?: Usuario; // Relación opcional
-  metodo_pago?: MetodoPago; // Relación opcional
-  detalles?: DetalleVenta[]; // Relación opcional
+  customerId: number;
+  employeeId: number;
+  paymentMethodId: number;
+  customer?: User; // optional relation
+  employee?: User; // optional relation
+  paymentMethod?: PaymentMethod; // optional relation
+  details?: SaleDetail[]; // optional relation
+  detalles?: SaleDetail[]; // legacy compatibility
+
+  // Legacy Spanish keys
+  venta_id?: number;
+  fecha_hora?: Date;
+  cliente_id?: number;
+  empleado_id?: number;
+  metodo_pago_id?: number;
 }
 
-export interface DetalleVenta {
-  detalle_venta_id: number;
-  venta_id: number;
-  libro_id: number; // ID del libro vendido
-  producto_id: number; // Alias para compatibilidad (mismo que libro_id)
-  cantidad: number;
-  precio_unitario: number;
+export interface SaleDetail {
+  saleDetailId: number;
+  saleId: number;
+  bookId: number; // ID del libro vendido
+  productId: number; // Alias para compatibilidad (mismo que bookId)
+  quantity: number;
+  unitPrice: number;
   subtotal: number;
-  libro?: Libro; // Relación opcional
-  producto?: Libro; // Alias para compatibilidad
+  book?: Book; // optional relation
+  product?: Book; // alias for compatibility
+
+  // Legacy Spanish keys
+  detalle_venta_id?: number;
+  venta_id?: number;
+  libro_id?: number;
+  producto_id?: number;
+  cantidad?: number;
+  precio_unitario?: number;
+  subtotal_legacy?: number;
 }
 
-export interface CrearVenta {
-  cliente_id: number;
-  empleado_id: number;
-  metodo_pago_id: number;
-  detalles: CrearDetalleVenta[];
+export interface CreateSale {
+  customerId: number;
+  employeeId: number;
+  paymentMethodId: number;
+  details: CreateSaleDetail[];
 }
 
-export interface CrearDetalleVenta {
-  libro_id?: number; // Preferir este
-  producto_id?: number; // Alias para compatibilidad
-  cantidad: number;
-  precio_unitario: number;
+export interface CreateSaleDetail {
+  bookId?: number; // Preferir este
+  productId?: number; // Alias para compatibilidad
+  quantity: number;
+  unitPrice: number;
 }
 
-export type EstadoVenta = 'pendiente' | 'completada' | 'cancelada';
+export type SaleStatus = "pendiente" | "completada" | "cancelada";

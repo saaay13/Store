@@ -1,45 +1,45 @@
-// ==================== FILTROS PARA BÚSQUEDAS ====================
+// ==================== SEARCH FILTERS ====================
 
-import type { FormatoLibro, IdiomaLibro, EstadoLibro } from '../entities/book';
-import type { GeneroLiterario } from '../entities/category';
+import type { BookFormat, BookLanguage, BookStatus } from "../entities/book";
+import type { LiteraryGenre } from "../entities/category";
 
-// Filtro para productos (libros)
+// Product (book) filter
 export interface FiltroLibros {
-  titulo?: string;
+  title?: string;
   isbn?: string;
-  autor_id?: number;
-  editorial_id?: number;
-  categoria_id?: number;
-  genero?: GeneroLiterario;
-  formato?: FormatoLibro;
-  idioma?: IdiomaLibro;
-  estado?: EstadoLibro;
-  año_desde?: number;
-  año_hasta?: number;
-  precio_min?: number;
-  precio_max?: number;
-  stock_min?: number;
-  stock_max?: number;
+  authorId?: number;
+  publisherId?: number;
+  categoryId?: number;
+  genre?: LiteraryGenre;
+  format?: BookFormat;
+  language?: BookLanguage;
+  status?: BookStatus;
+  yearFrom?: number;
+  yearTo?: number;
+  priceMin?: number;
+  priceMax?: number;
+  stockMin?: number;
+  stockMax?: number;
 }
 
-// Alias para compatibilidad
+// Alias for compatibility
 export type FiltroProductos = FiltroLibros;
 
 export interface FiltroVentas {
-  fecha_desde?: Date;
-  fecha_hasta?: Date;
-  cliente_id?: number;
-  empleado_id?: number;
-  metodo_pago_id?: number;
-  total_min?: number;
-  total_max?: number;
+  dateFrom?: Date;
+  dateTo?: Date;
+  customerId?: number;
+  employeeId?: number;
+  paymentMethodId?: number;
+  totalMin?: number;
+  totalMax?: number;
 }
 
 export interface FiltroCompras {
-  fecha_desde?: Date;
-  fecha_hasta?: Date;
-  proveedor_id?: number;
-  empleado_id?: number;
-  total_min?: number;
-  total_max?: number;
+  dateFrom?: Date;
+  dateTo?: Date;
+  supplierId?: number;
+  employeeId?: number;
+  totalMin?: number;
+  totalMax?: number;
 }

@@ -16,11 +16,11 @@ const Badge: React.FC<BadgeProps> = ({
   const baseClasses = 'inline-flex items-center font-medium rounded-full';
 
   const variantClasses = {
-    primary: 'bg-primary text-white',
-    secondary: 'bg-secondary text-white',
-    success: 'bg-success text-white',
-    warning: 'bg-warning text-white',
-    error: 'bg-error text-white',
+    primary: 'bg-primary text-primary-foreground',
+    secondary: 'bg-muted text-foreground',
+    success: 'bg-success text-success-foreground',
+    warning: 'bg-warning text-warning-foreground',
+    error: 'bg-error text-error-foreground',
   };
 
   const sizeClasses = {

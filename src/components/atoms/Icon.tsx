@@ -1,4 +1,5 @@
 import React from 'react';
+import * as LucideIcons from 'lucide-react';
 
 interface IconProps {
   name: string;
@@ -7,55 +8,58 @@ interface IconProps {
   color?: string;
 }
 
+const sizeClasses = {
+  xs: 'w-3 h-3',
+  sm: 'w-4 h-4',
+  md: 'w-5 h-5',
+  lg: 'w-6 h-6',
+  xl: 'w-8 h-8',
+};
+
+const iconMap: Record<string, keyof typeof LucideIcons> = {
+  home: 'Home',
+  user: 'User',
+  settings: 'Settings',
+  search: 'Search',
+  plus: 'Plus',
+  minus: 'Minus',
+  edit: 'Edit',
+  delete: 'Trash2',
+  check: 'Check',
+  close: 'X',
+  arrowLeft: 'ArrowLeft',
+  arrowRight: 'ArrowRight',
+  arrowUp: 'ArrowUp',
+  arrowDown: 'ArrowDown',
+  menu: 'Menu',
+  loading: 'Loader2',
+  success: 'CheckCircle',
+  error: 'AlertCircle',
+  warning: 'AlertTriangle',
+  info: 'Info',
+};
+
 const Icon: React.FC<IconProps> = ({
   name,
   size = 'md',
   className = '',
-  color = 'currentColor'
+  color = 'currentColor',
 }) => {
-  const sizeClasses = {
-    xs: 'w-3 h-3',
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
-    xl: 'w-8 h-8',
-  };
+  const iconKey = iconMap[name] || 'Circle';
+  const LucideIcon = LucideIcons[iconKey];
 
-  // Simple icon mapping - in a real app, you'd use a proper icon library
-  const iconMap: Record<string, string> = {
-    home: '🏠',
-    user: '👤',
-    settings: '⚙️',
-    search: '🔍',
-    plus: '➕',
-    minus: '➖',
-    edit: '✏️',
-    delete: '🗑️',
-    check: '✓',
-    close: '✕',
-    arrowLeft: '←',
-    arrowRight: '→',
-    arrowUp: '↑',
-    arrowDown: '↓',
-    menu: '☰',
-    loading: '⏳',
-    success: '✅',
-    error: '❌',
-    warning: '⚠️',
-    info: 'ℹ️',
-  };
+  if (!LucideIcon) {
+    return null;
+  }
 
-  const icon = iconMap[name] || '❓';
+  const spinClass = name === 'loading' ? 'animate-spin' : '';
 
   return (
-    <span
-      className={`${sizeClasses[size]} inline-flex items-center justify-center ${className}`}
-      style={{ color }}
-      role="img"
-      aria-label={name}
-    >
-      {icon}
-    </span>
+    <LucideIcon
+      className={`${sizeClasses[size]} ${className} ${spinClass}`.trim()}
+      color={color}
+      strokeWidth={2}
+    />
   );
 };
 

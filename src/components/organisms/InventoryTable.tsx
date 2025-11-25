@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Button, Card } from '../atoms';
 import { DataTable, SearchBar, Pagination } from '../molecules';
 import { Icon } from '../atoms';
-import type { Libro, Categoria } from '../../types';
+import type { Book, Category } from '../../types';
 
 interface InventoryTableProps {
-  products: Libro[];
-  categories: Categoria[];
+  products: Book[];
+  categories: Category[];
   loading?: boolean;
-  onEdit: (product: Libro) => void;
-  onDelete: (product: Libro) => void;
+  onEdit: (product: Book) => void;
+  onDelete: (product: Book) => void;
   onCreate: () => void;
 }
 
@@ -24,24 +24,29 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<string>('titulo');
+  const [sortBy, setSortBy] = useState<string>('title');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const itemsPerPage = 10;
 
   // Filter products
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.sinopsis.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.isbn.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || product.categoria_id.toString() === selectedCategory;
+    const title = (product.title ?? product.titulo ?? '').toLowerCase();
+    const synopsis = (product.synopsis ?? product.sinopsis ?? '').toLowerCase();
+    const isbn = product.isbn?.toLowerCase() ?? '';
+    const matchesSearch =
+      title.includes(searchQuery.toLowerCase()) ||
+      synopsis.includes(searchQuery.toLowerCase()) ||
+      isbn.includes(searchQuery.toLowerCase());
+    const categoryId = product.categoryId;
+    const matchesCategory = !selectedCategory || categoryId?.toString() === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    let aValue: any = a[sortBy as keyof Libro];
-    let bValue: any = b[sortBy as keyof Libro];
+    let aValue: any = a[sortBy as keyof Book] ?? (a as any)[sortBy];
+    let bValue: any = b[sortBy as keyof Book] ?? (b as any)[sortBy];
 
     if (typeof aValue === 'string') {
       aValue = aValue.toLowerCase();
@@ -85,12 +90,12 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
 
   const columns = [
     {
-      key: 'titulo',
+      key: 'title',
       header: 'Libro',
       sortable: true,
-      render: (value: string, libro: Libro) => (
+      render: (_: string, libro: Book) => (
         <div>
-          <div className="font-medium text-gray-900">{value}</div>
+          <div className="font-medium text-gray-900">{libro.title}</div>
           <div className="text-sm text-gray-500">ISBN: {libro.isbn}</div>
         </div>
       )
@@ -98,33 +103,38 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
     {
       key: 'autor',
       header: 'Autor',
-      render: (_: any, libro: Libro) => {
-        return libro.autor?.nombre || '-';
+      render: (_: any, libro: Book) => {
+        return libro.author?.name ?? libro.autor?.nombre ?? '-';
       }
     },
     {
       key: 'categoria',
       header: 'Categoría',
-      render: (_: any, libro: Libro) => {
-        const category = categories.find(c => c.categoria_id === libro.categoria_id);
-        return category?.nombre || 'Sin categoría';
+      render: (_: any, libro: Book) => {
+        const categoryId = libro.categoryId;
+        const category = categories.find(c => c.categoryId === categoryId);
+        return category?.name ?? 'Sin categoría';
       }
     },
     {
-      key: 'precio_venta',
+      key: 'price',
       header: 'Precio',
       sortable: true,
-      render: (value: number) => `Bs. ${value.toFixed(2)}`
+      render: (_: number, libro: Book) => {
+        const price = libro.price ?? libro.precio_venta ?? 0;
+        return `Bs. ${price.toFixed(2)}`;
+      }
     },
     {
-      key: 'stock_actual',
+      key: 'stock',
       header: 'Stock',
       sortable: true,
-      render: (value: number) => {
-        const status = getStockStatus(value);
+      render: (_: number, libro: Book) => {
+        const stock = libro.stock ?? libro.stock_actual ?? 0;
+        const status = getStockStatus(stock);
         return (
           <div className="flex items-center space-x-2">
-            <span>{value} unidades</span>
+            <span>{stock} unidades</span>
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
               ${status.variant === 'error' ? 'bg-red-100 text-red-800' :
                 status.variant === 'warning' ? 'bg-yellow-100 text-yellow-800' :
@@ -138,12 +148,12 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
     {
       key: 'formato',
       header: 'Formato',
-      render: (value: string) => value || '-'
+      render: (_: string, libro: Book) => libro.format ?? libro.formato ?? '-'
     },
     {
       key: 'actions',
       header: 'Acciones',
-      render: (_: any, libro: Libro) => (
+      render: (_: any, libro: Book) => (
         <div className="flex space-x-2">
           <Button
             variant="secondary"
@@ -173,8 +183,8 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       options: [
         { value: '', label: 'Todas las categorías' },
         ...categories.map(cat => ({
-          value: cat.categoria_id.toString(),
-          label: cat.nombre
+          value: cat.categoryId?.toString() ?? '',
+          label: cat.name ?? 'Categoría'
         }))
       ]
     }
@@ -236,19 +246,22 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
         </Card>
         <Card className="p-4 text-center">
           <div className="text-2xl font-bold text-success">
-            {products.filter(p => p.stock_actual > 10).length}
+            {products.filter(p => (p.stock ?? p.stock_actual ?? 0) > 10).length}
           </div>
           <div className="text-sm text-gray-600">Con Stock</div>
         </Card>
         <Card className="p-4 text-center">
           <div className="text-2xl font-bold text-warning">
-            {products.filter(p => p.stock_actual > 0 && p.stock_actual <= 10).length}
+            {products.filter(p => {
+              const stock = p.stock ?? p.stock_actual ?? 0;
+              return stock > 0 && stock <= 10;
+            }).length}
           </div>
           <div className="text-sm text-gray-600">Stock Bajo</div>
         </Card>
         <Card className="p-4 text-center">
           <div className="text-2xl font-bold text-error">
-            {products.filter(p => p.stock_actual === 0).length}
+            {products.filter(p => (p.stock ?? p.stock_actual ?? 0) === 0).length}
           </div>
           <div className="text-sm text-gray-600">Agotados</div>
         </Card>

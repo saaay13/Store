@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Input, Textarea } from '../atoms';
 import { IconPicker } from '../molecules';
-import type { Categoria, CrearCategoria } from '../../types';
+import type { Category, CreateCategory } from '../../types';
 
 interface CategoryFormProps {
-  category?: Categoria;
-  onSubmit: (data: CrearCategoria) => Promise<void>;
+  category?: Category;
+  onSubmit: (data: CreateCategory) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
 }
@@ -17,10 +17,10 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   loading = false
 }) => {
   const [formData, setFormData] = useState({
-    nombre: category?.nombre || '',
-    descripcion: category?.descripcion || '',
-    icono: category?.icono || null,
-    imagen_url: category?.imagen_url || ''
+    name: category?.name || '',
+    description: category?.description || '',
+    icon: category?.icon || null,
+    imageUrl: category?.imageUrl || ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -40,24 +40,24 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre es obligatorio';
-    } else if (formData.nombre.length < 3) {
-      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres';
-    } else if (formData.nombre.length > 100) {
-      newErrors.nombre = 'El nombre no puede exceder 100 caracteres';
+    if (!formData.name.trim()) {
+      newErrors.name = 'El nombre es obligatorio';
+    } else if (formData.name.length < 3) {
+      newErrors.name = 'El nombre debe tener al menos 3 caracteres';
+    } else if (formData.name.length > 100) {
+      newErrors.name = 'El nombre no puede exceder 100 caracteres';
     }
 
-    if (!formData.descripcion.trim()) {
-      newErrors.descripcion = 'La descripción es obligatoria';
-    } else if (formData.descripcion.length < 10) {
-      newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres';
-    } else if (formData.descripcion.length > 500) {
-      newErrors.descripcion = 'La descripción no puede exceder 500 caracteres';
+    if (!formData.description.trim()) {
+      newErrors.description = 'La descripción es obligatoria';
+    } else if (formData.description.length < 10) {
+      newErrors.description = 'La descripción debe tener al menos 10 caracteres';
+    } else if (formData.description.length > 500) {
+      newErrors.description = 'La descripción no puede exceder 500 caracteres';
     }
 
-    if (formData.imagen_url && !isValidURL(formData.imagen_url)) {
-      newErrors.imagen_url = 'Debe ser una URL válida';
+    if (formData.imageUrl && !isValidURL(formData.imageUrl)) {
+      newErrors.imageUrl = 'Debe ser una URL válida';
     }
 
     setErrors(newErrors);
@@ -72,11 +72,11 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     }
 
     try {
-      const submitData: CrearCategoria = {
-        nombre: formData.nombre,
-        descripcion: formData.descripcion,
-        icono: formData.icono || undefined,
-        imagen_url: formData.imagen_url || undefined
+      const submitData: CreateCategory = {
+        name: formData.name,
+        description: formData.description,
+        icon: formData.icon || undefined,
+        imageUrl: formData.imageUrl || undefined
       };
 
       await onSubmit(submitData);
@@ -102,13 +102,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         </label>
         <Input
           type="text"
-          value={formData.nombre}
-          onChange={(e) => handleChange('nombre', e.target.value)}
-          variant={errors.nombre ? 'error' : 'default'}
+          value={formData.name}
+          onChange={(e) => handleChange('name', e.target.value)}
+          variant={errors.name ? 'error' : 'default'}
           placeholder="Ej: Ficción Contemporánea"
         />
-        {errors.nombre && (
-          <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name}</p>
         )}
       </div>
 
@@ -118,23 +118,23 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           Descripción *
         </label>
         <Textarea
-          value={formData.descripcion}
-          onChange={(e) => handleChange('descripcion', e.target.value)}
-          variant={errors.descripcion ? 'error' : 'default'}
+          value={formData.description}
+          onChange={(e) => handleChange('description', e.target.value)}
+          variant={errors.description ? 'error' : 'default'}
           placeholder="Describe las características de esta categoría..."
           rows={4}
         />
-        {errors.descripcion && (
-          <p className="mt-1 text-sm text-red-600">{errors.descripcion}</p>
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-600">{errors.description}</p>
         )}
       </div>
 
       {/* Icono */}
       <IconPicker
         label="Icono (opcional)"
-        value={formData.icono}
-        onChange={(icon) => handleChange('icono', icon)}
-        error={errors.icono}
+        value={formData.icon}
+        onChange={(icon) => handleChange('icon', icon)}
+        error={errors.icon}
       />
 
       {/* URL de Imagen */}
@@ -144,13 +144,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         </label>
         <Input
           type="url"
-          value={formData.imagen_url || ''}
-          onChange={(e) => handleChange('imagen_url', e.target.value)}
-          variant={errors.imagen_url ? 'error' : 'default'}
+          value={formData.imageUrl || ''}
+          onChange={(e) => handleChange('imageUrl', e.target.value)}
+          variant={errors.imageUrl ? 'error' : 'default'}
           placeholder="https://ejemplo.com/imagen.jpg"
         />
-        {errors.imagen_url && (
-          <p className="mt-1 text-sm text-red-600">{errors.imagen_url}</p>
+        {errors.imageUrl && (
+          <p className="mt-1 text-sm text-red-600">{errors.imageUrl}</p>
         )}
       </div>
 

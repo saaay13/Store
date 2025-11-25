@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactElement } from 'react';
-import type { Toast, ToastVariant } from '../../../stores/ui/types';
+import { useEffect, useState, type ReactElement } from "react";
+import type { Toast, ToastVariant } from "../../../stores/ui/types";
 
 interface ToastItemProps {
   toast: Toast;
@@ -11,32 +11,32 @@ const variantStyles: Record<
   { bg: string; border: string; icon: string; text: string; shadow: string }
 > = {
   success: {
-    bg: 'bg-green-500/10 dark:bg-green-400/15',
-    border: '!border-green-500/20 dark:!border-green-400/25',
-    icon: 'text-green-600 dark:text-green-400',
-    text: 'text-green-900 dark:text-green-100',
-    shadow: 'shadow-xl shadow-green-500/10 dark:shadow-green-400/20',
+    bg: "bg-green-500/10 dark:bg-green-400/15",
+    border: "!border-green-500/20 dark:!border-green-400/25",
+    icon: "text-green-600 dark:text-green-400",
+    text: "text-green-900 dark:text-green-950",
+    shadow: "shadow-xl shadow-green-500/10 dark:shadow-green-400/20",
   },
   error: {
-    bg: 'bg-red-500/10 dark:bg-red-400/15',
-    border: '!border-red-500/20 dark:!border-red-400/25',
-    icon: 'text-red-600 dark:text-red-400',
-    text: 'text-red-900 dark:text-red-100',
-    shadow: 'shadow-xl shadow-red-500/10 dark:shadow-red-400/20',
+    bg: "bg-red-500/10 dark:bg-red-400/15",
+    border: "!border-red-500/20 dark:!border-red-400/25",
+    icon: "text-red-600 dark:text-red-400",
+    text: "text-red-900 dark:text-red-950",
+    shadow: "shadow-xl shadow-red-500/10 dark:shadow-red-400/20",
   },
   warning: {
-    bg: 'bg-amber-500/10 dark:bg-amber-400/15',
-    border: '!border-amber-500/20 dark:!border-amber-400/25',
-    icon: 'text-amber-600 dark:text-amber-400',
-    text: 'text-amber-900 dark:text-amber-100',
-    shadow: 'shadow-xl shadow-amber-500/10 dark:shadow-amber-400/20',
+    bg: "bg-amber-500/10 dark:bg-amber-400/15",
+    border: "!border-amber-500/20 dark:!border-amber-400/25",
+    icon: "text-amber-600 dark:text-amber-400",
+    text: "text-amber-900 dark:text-amber-950",
+    shadow: "shadow-xl shadow-amber-500/10 dark:shadow-amber-400/20",
   },
   info: {
-    bg: 'bg-blue-500/10 dark:bg-blue-400/15',
-    border: '!border-blue-500/20 dark:!border-blue-400/25',
-    icon: 'text-blue-600 dark:text-blue-400',
-    text: 'text-blue-900 dark:text-blue-100',
-    shadow: 'shadow-xl shadow-blue-500/10 dark:shadow-blue-400/20',
+    bg: "bg-blue-500/10 dark:bg-blue-400/15",
+    border: "!border-blue-500/20 dark:!border-blue-400/25",
+    icon: "text-blue-600 dark:text-blue-400",
+    text: "text-blue-900 dark:text-blue-950",
+    shadow: "shadow-xl shadow-blue-500/10 dark:shadow-blue-400/20",
   },
 };
 
@@ -117,7 +117,7 @@ export function ToastItem({ toast, onRemove }: ToastItemProps) {
     <div
       className={`
         rounded-2xl transition-all duration-300 ease-out mb-3
-        ${isExiting ? 'max-h-0 mb-0 opacity-0' : 'max-h-[200px] opacity-100'}
+        ${isExiting ? "max-h-0 mb-0 opacity-0" : "max-h-[200px] opacity-100"}
       `}
     >
       <div
@@ -128,8 +128,8 @@ export function ToastItem({ toast, onRemove }: ToastItemProps) {
           pointer-events-auto backdrop-blur-xl
           ${
             isExiting
-              ? 'translate-x-full opacity-0'
-              : 'translate-x-0 opacity-100'
+              ? "translate-x-full opacity-0"
+              : "translate-x-0 opacity-100"
           }
         `}
         role="alert"

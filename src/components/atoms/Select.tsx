@@ -20,10 +20,11 @@ const Select: React.FC<SelectProps> = ({
   className = '',
   ...props
 }) => {
-  const baseClasses = 'block w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors';
+  const baseClasses =
+    'block w-full rounded-md border bg-background text-foreground placeholder:text-muted-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors';
 
   const variantClasses = {
-    default: 'border-gray-300 focus:border-primary-500 focus:ring-primary-500',
+    default: 'border-input focus:border-ring focus:ring-ring',
     error: 'border-error focus:border-error focus:ring-error',
   };
 
@@ -33,7 +34,7 @@ const Select: React.FC<SelectProps> = ({
     lg: 'px-4 py-3 text-lg',
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} disabled:opacity-60 disabled:cursor-not-allowed ${className}`;
 
   return (
     <select className={classes} {...props}>

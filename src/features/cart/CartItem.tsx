@@ -7,22 +7,28 @@ interface CartItemProps {
 
 export const CartItem = ({ item }: CartItemProps) => {
   const { updateQuantity, removeFromCart } = useCart();
-  const { libro, quantity } = item;
+  const { book, quantity } = item;
+  const bookId = book.bookId ?? book.libro_id;
+  const price = book.price ?? book.precio_venta ?? 0;
 
   const handleQuantityChange = (newQuantity: number) => {
-    updateQuantity(libro.libro_id, newQuantity);
+    if (bookId !== undefined) {
+      updateQuantity(bookId, newQuantity);
+    }
   };
 
   const handleRemove = () => {
-    removeFromCart(libro.libro_id);
+    if (bookId !== undefined) {
+      removeFromCart(bookId);
+    }
   };
 
   return (
     <div className="flex items-center justify-between p-4 border-b">
       <div className="flex-1">
-        <h3 className="font-semibold">{libro.titulo}</h3>
-        <p className="text-gray-600">{libro.sinopsis}</p>
-        <p className="text-sm text-gray-500">Precio: Bs. {libro.precio_venta}</p>
+        <h3 className="font-semibold">{book.title ?? book.titulo}</h3>
+        <p className="text-gray-600">{book.synopsis ?? book.sinopsis}</p>
+        <p className="text-sm text-gray-500">Precio: Bs. {price}</p>
       </div>
       <div className="flex items-center space-x-2">
         <button
@@ -46,7 +52,7 @@ export const CartItem = ({ item }: CartItemProps) => {
         </button>
       </div>
       <div className="ml-4 text-right">
-        <p className="font-semibold">Bs. {(libro.precio_venta * quantity).toFixed(2)}</p>
+        <p className="font-semibold">Bs. {(price * quantity).toFixed(2)}</p>
       </div>
     </div>
   );

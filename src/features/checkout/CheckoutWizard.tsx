@@ -513,12 +513,12 @@ const ReviewStep = ({ data, onSubmit, onBack }: {
           <h3 className="text-lg font-medium text-gray-900 mb-3">Libros</h3>
           <div className="space-y-3">
             {data.cartItems.map((item) => (
-              <div key={item.libro.libro_id} className="flex justify-between items-center text-sm">
+              <div key={item.book.bookId ?? item.book.libro_id} className="flex justify-between items-center text-sm">
                 <div className="flex-1">
-                  <span className="font-medium">{item.libro.titulo}</span>
+                  <span className="font-medium">{item.book.title ?? item.book.titulo}</span>
                   <span className="text-gray-500 ml-2">x{item.quantity}</span>
                 </div>
-                <span className="font-medium">Bs. {(item.libro.precio_venta * item.quantity).toFixed(2)}</span>
+                <span className="font-medium">Bs. {((item.book.price ?? item.book.precio_venta ?? 0) * item.quantity).toFixed(2)}</span>
               </div>
             ))}
           </div>
