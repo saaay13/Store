@@ -7,22 +7,22 @@ interface CartItemProps {
 
 export const CartItem = ({ item }: CartItemProps) => {
   const { updateQuantity, removeFromCart } = useCart();
-  const { product, quantity } = item;
+  const { libro, quantity } = item;
 
   const handleQuantityChange = (newQuantity: number) => {
-    updateQuantity(product.producto_id, newQuantity);
+    updateQuantity(libro.libro_id, newQuantity);
   };
 
   const handleRemove = () => {
-    removeFromCart(product.producto_id);
+    removeFromCart(libro.libro_id);
   };
 
   return (
     <div className="flex items-center justify-between p-4 border-b">
       <div className="flex-1">
-        <h3 className="font-semibold">{product.nombre}</h3>
-        <p className="text-gray-600">{product.descripcion}</p>
-        <p className="text-sm text-gray-500">Precio: Bs. {product.precio_venta}</p>
+        <h3 className="font-semibold">{libro.titulo}</h3>
+        <p className="text-gray-600">{libro.sinopsis}</p>
+        <p className="text-sm text-gray-500">Precio: Bs. {libro.precio_venta}</p>
       </div>
       <div className="flex items-center space-x-2">
         <button
@@ -46,7 +46,7 @@ export const CartItem = ({ item }: CartItemProps) => {
         </button>
       </div>
       <div className="ml-4 text-right">
-        <p className="font-semibold">Bs. {(product.precio_venta * quantity).toFixed(2)}</p>
+        <p className="font-semibold">Bs. {(libro.precio_venta * quantity).toFixed(2)}</p>
       </div>
     </div>
   );

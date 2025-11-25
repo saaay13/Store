@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { Usuario } from '../types';
+import type { Usuario } from '../../types';
 
 interface AuthContextType {
   user: Usuario | null;
@@ -39,25 +39,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual API call
-      // For now, simulate login
-      if (credentials.nombre_usuario && credentials.password) {
-        const mockUser: Usuario = {
-          usuario_id: 1,
-          nombre: 'Usuario Demo',
-          telefono: '123456789',
-          direccion: 'Dirección Demo',
-          email: 'demo@store.com',
-          tipo_usuario: 'admin',
-          nombre_usuario: credentials.nombre_usuario,
-          password_hash: null
-        };
+      // Fetch usuarios from JSON file
+      const response = await fetch('/src/features/auth/data/usuarios.json');
+      if (!response.ok) {
+        throw new Error('Failed to fetch usuarios');
+      }
 
-        setUser(mockUser);
-        localStorage.setItem('user', JSON.stringify(mockUser));
+      const data = await response.json();
+      const usuarios: Usuario[] = data.usuarios;
+
+      // Find user by username and password
+      const foundUser = usuarios.find(
+        (u) => u.nombre_usuario === credentials.nombre_usuario &&
+               u.password_hash === credentials.password
+      );
+
+      if (foundUser) {
+        setUser(foundUser);
+        localStorage.setItem('user', JSON.stringify(foundUser));
         setIsLoading(false);
         return true;
       }
+
+      setIsLoading(false);
       return false;
     } catch (error) {
       console.error('Login error:', error);

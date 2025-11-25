@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Button, Card } from '../atoms';
 import { DataTable, SearchBar, Pagination } from '../molecules';
 import { Icon } from '../atoms';
-import type { Producto, Categoria } from '../../types';
+import type { Libro, Categoria } from '../../types';
 
 interface InventoryTableProps {
-  products: Producto[];
+  products: Libro[];
   categories: Categoria[];
   loading?: boolean;
-  onEdit: (product: Producto) => void;
-  onDelete: (product: Producto) => void;
+  onEdit: (product: Libro) => void;
+  onDelete: (product: Libro) => void;
   onCreate: () => void;
 }
 
@@ -24,23 +24,24 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<string>('nombre');
+  const [sortBy, setSortBy] = useState<string>('titulo');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const itemsPerPage = 10;
 
   // Filter products
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.descripcion.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = product.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         product.sinopsis.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         product.isbn.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || product.categoria_id.toString() === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    let aValue: any = a[sortBy as keyof Producto];
-    let bValue: any = b[sortBy as keyof Producto];
+    let aValue: any = a[sortBy as keyof Libro];
+    let bValue: any = b[sortBy as keyof Libro];
 
     if (typeof aValue === 'string') {
       aValue = aValue.toLowerCase();
@@ -84,21 +85,28 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
 
   const columns = [
     {
-      key: 'nombre',
-      header: 'Producto',
+      key: 'titulo',
+      header: 'Libro',
       sortable: true,
-      render: (value: string, product: Producto) => (
+      render: (value: string, libro: Libro) => (
         <div>
           <div className="font-medium text-gray-900">{value}</div>
-          <div className="text-sm text-gray-500">{product.descripcion}</div>
+          <div className="text-sm text-gray-500">ISBN: {libro.isbn}</div>
         </div>
       )
     },
     {
+      key: 'autor',
+      header: 'Autor',
+      render: (_: any, libro: Libro) => {
+        return libro.autor?.nombre || '-';
+      }
+    },
+    {
       key: 'categoria',
       header: 'Categoría',
-      render: (_: any, product: Producto) => {
-        const category = categories.find(c => c.categoria_id === product.categoria_id);
+      render: (_: any, libro: Libro) => {
+        const category = categories.find(c => c.categoria_id === libro.categoria_id);
         return category?.nombre || 'Sin categoría';
       }
     },
@@ -112,11 +120,11 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       key: 'stock_actual',
       header: 'Stock',
       sortable: true,
-      render: (value: number, product: Producto) => {
+      render: (value: number) => {
         const status = getStockStatus(value);
         return (
           <div className="flex items-center space-x-2">
-            <span>{value} {product.unidad_medida}</span>
+            <span>{value} unidades</span>
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
               ${status.variant === 'error' ? 'bg-red-100 text-red-800' :
                 status.variant === 'warning' ? 'bg-yellow-100 text-yellow-800' :
@@ -128,19 +136,19 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       }
     },
     {
-      key: 'codigo_barras',
-      header: 'Código',
+      key: 'formato',
+      header: 'Formato',
       render: (value: string) => value || '-'
     },
     {
       key: 'actions',
       header: 'Acciones',
-      render: (_: any, product: Producto) => (
+      render: (_: any, libro: Libro) => (
         <div className="flex space-x-2">
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => onEdit(product)}
+            onClick={() => onEdit(libro)}
           >
             <Icon name="edit" size="sm" className="mr-1" />
             Editar
@@ -148,7 +156,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
           <Button
             variant="error"
             size="sm"
-            onClick={() => onDelete(product)}
+            onClick={() => onDelete(libro)}
           >
             <Icon name="delete" size="sm" className="mr-1" />
             Eliminar
@@ -177,19 +185,19 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Inventario</h2>
-          <p className="text-gray-600">Gestión de productos y stock</p>
+          <h2 className="text-2xl font-bold text-gray-900">Inventario de Libros</h2>
+          <p className="text-gray-600">Gestión de libros y stock</p>
         </div>
         <Button onClick={onCreate}>
           <Icon name="plus" size="sm" className="mr-2" />
-          Nuevo Producto
+          Nuevo Libro
         </Button>
       </div>
 
       {/* Search and Filters */}
       <Card className="p-6">
         <SearchBar
-          placeholder="Buscar productos..."
+          placeholder="Buscar por título, ISBN o sinopsis..."
           filters={filterOptions}
           onSearch={handleSearch}
         />
@@ -201,7 +209,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
           data={paginatedProducts}
           columns={columns}
           loading={loading}
-          emptyMessage="No se encontraron productos"
+          emptyMessage="No se encontraron libros"
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={handleSort}
@@ -224,7 +232,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-4 text-center">
           <div className="text-2xl font-bold text-primary">{products.length}</div>
-          <div className="text-sm text-gray-600">Total Productos</div>
+          <div className="text-sm text-gray-600">Total Libros</div>
         </Card>
         <Card className="p-4 text-center">
           <div className="text-2xl font-bold text-success">

@@ -19,7 +19,7 @@ export const Cart = () => {
       <h2 className="text-2xl font-bold mb-4">Carrito de Compras</h2>
       <div className="bg-white rounded-lg shadow-md">
         {cart.items.map((item) => (
-          <CartItem key={item.product.producto_id} item={item} />
+          <CartItem key={item.libro.libro_id} item={item} />
         ))}
       </div>
       <div className="mt-6 flex justify-between items-center">

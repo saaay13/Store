@@ -510,15 +510,15 @@ const ReviewStep = ({ data, onSubmit, onBack }: {
 
         {/* Order Items */}
         <div className="border rounded-lg p-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Productos</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-3">Libros</h3>
           <div className="space-y-3">
             {data.cartItems.map((item) => (
-              <div key={item.product.producto_id} className="flex justify-between items-center text-sm">
+              <div key={item.libro.libro_id} className="flex justify-between items-center text-sm">
                 <div className="flex-1">
-                  <span className="font-medium">{item.product.nombre}</span>
+                  <span className="font-medium">{item.libro.titulo}</span>
                   <span className="text-gray-500 ml-2">x{item.quantity}</span>
                 </div>
-                <span className="font-medium">Bs. {(item.product.precio_venta * item.quantity).toFixed(2)}</span>
+                <span className="font-medium">Bs. {(item.libro.precio_venta * item.quantity).toFixed(2)}</span>
               </div>
             ))}
           </div>
@@ -541,7 +541,7 @@ const ReviewStep = ({ data, onSubmit, onBack }: {
   );
 };
 
-const ConfirmationStep = ({ data, onContinue }: any) => (
+const ConfirmationStep = ({ onContinue }: any) => (
   <div className="text-center">
     <h2 className="text-xl font-semibold mb-4">¡Pedido Confirmado!</h2>
     <p className="text-gray-600 mb-4">Tu pedido ha sido procesado exitosamente.</p>

@@ -3,42 +3,38 @@
 // Entidades del dominio
 export type {
   Usuario,
-  TipoUsuario,
+  Rol,
   CrearUsuario,
   ActualizarUsuario,
-} from './entities/user';
+} from "./entities/user";
 
 export type {
   Categoria,
   CrearCategoria,
   ActualizarCategoria,
   GeneroLiterario,
-} from './entities/category';
+} from "./entities/category";
 
-export type {
-  Autor,
-  CrearAutor,
-  ActualizarAutor,
-} from './entities/author';
+export type { Autor, CrearAutor, ActualizarAutor } from "./entities/author";
 
 export type {
   Libro,
   CrearLibro,
   ActualizarLibro,
   EstadoLibro,
-} from './entities/book';
+} from "./entities/book";
 
 export type {
   Proveedor,
   CrearProveedor,
   ActualizarProveedor,
-} from './entities/supplier';
+} from "./entities/supplier";
 
 export type {
   MetodoPago,
   CrearMetodoPago,
   ActualizarMetodoPago,
-} from './entities/payment-method';
+} from "./entities/payment-method";
 
 export type {
   Venta,
@@ -46,7 +42,7 @@ export type {
   CrearVenta,
   CrearDetalleVenta,
   EstadoVenta,
-} from './entities/sale';
+} from "./entities/sale";
 
 export type {
   Compra,
@@ -54,34 +50,21 @@ export type {
   CrearCompra,
   CrearDetalleCompra,
   EstadoCompra,
-} from './entities/purchase';
+} from "./entities/purchase";
 
 // Operaciones CRUD
-export type * from './operations/create';
-export type * from './operations/update';
+export type * from "./operations/create";
+export type * from "./operations/update";
 
 // API
-export type {
-  RespuestaAPI,
-  ListaPaginada,
-} from './api/responses';
+export type { RespuestaAPI, ListaPaginada } from "./api/responses";
 
-export type {
-  FiltroLibros,
-  FiltroVentas,
-  FiltroCompras,
-} from './api/filters';
+export type { FiltroLibros, FiltroVentas, FiltroCompras } from "./api/filters";
 
-export type {
-  OpcionesPaginacion,
-  InfoPaginacion,
-} from './api/pagination';
+export type { OpcionesPaginacion, InfoPaginacion } from "./api/pagination";
 
 // Reportes
-export type {
-  ReporteVentas,
-  ReporteInventario,
-} from './reports';
+export type { ReporteVentas, ReporteInventario } from "./reports";
 
 // Autenticación
 export type {
@@ -89,7 +72,7 @@ export type {
   TokenUsuario,
   SesionUsuario,
   CambioPassword,
-} from './auth';
+} from "./auth";
 
 // Validación
 export type {
@@ -99,7 +82,7 @@ export type {
   ValidadorLibro,
   ValidadorUsuario,
   ValidadorVenta,
-} from './validation';
+} from "./validation";
 
 // Configuración
 export type {
@@ -107,4 +90,4 @@ export type {
   ConfiguracionSistema,
   ConfiguracionImpresion,
   ConfiguracionBackup,
-} from './config';
+} from "./config";

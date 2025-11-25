@@ -1,42 +1,149 @@
 [
   {
     "categoria_id": 1,
-    "nombre": "Electrónica",
-    "descripcion": "Dispositivos electrónicos y accesorios"
+    "nombre": "Ficción Contemporánea",
+    "descripcion": "Novelas y cuentos de la época moderna que reflejan la vida actual y sus complejidades",
+    "icono": "BookOpen",
+    "imagen_url": null
   },
   {
     "categoria_id": 2,
-    "nombre": "Ropa",
-    "descripcion": "Prendas de vestir y accesorios de moda"
+    "nombre": "Ciencia Ficción",
+    "descripcion": "Narrativas futuristas y especulativas sobre ciencia, tecnología y mundos alternativos",
+    "icono": "Rocket",
+    "imagen_url": null
   },
   {
     "categoria_id": 3,
-    "nombre": "Alimentos",
-    "descripcion": "Productos alimenticios y bebidas"
+    "nombre": "Fantasía Épica",
+    "descripcion": "Mundos mágicos, criaturas fantásticas y aventuras épicas en reinos imaginarios",
+    "icono": "Sparkles",
+    "imagen_url": null
   },
   {
     "categoria_id": 4,
-    "nombre": "Hogar",
-    "descripcion": "Artículos para el hogar y decoración"
+    "nombre": "Romance",
+    "descripcion": "Historias de amor, relaciones románticas y lazos emocionales profundos",
+    "icono": "Heart",
+    "imagen_url": null
   },
   {
     "categoria_id": 5,
-    "nombre": "Deportes",
-    "descripcion": "Equipamiento y ropa deportiva"
+    "nombre": "Misterio y Thriller",
+    "descripcion": "Novelas de suspenso, crímenes, enigmas por resolver y giros inesperados",
+    "icono": "Search",
+    "imagen_url": null
   },
   {
     "categoria_id": 6,
-    "nombre": "Libros",
-    "descripcion": "Libros, revistas y material educativo"
+    "nombre": "Terror",
+    "descripcion": "Historias de horror, miedo sobrenatural y tensión psicológica",
+    "icono": "Skull",
+    "imagen_url": null
   },
   {
     "categoria_id": 7,
-    "nombre": "Juguetes",
-    "descripcion": "Juguetes y entretenimiento infantil"
+    "nombre": "No Ficción",
+    "descripcion": "Ensayos, análisis y textos basados en hechos reales y conocimiento verificable",
+    "icono": "BookMarked",
+    "imagen_url": null
   },
   {
     "categoria_id": 8,
-    "nombre": "Belleza",
-    "descripcion": "Productos de cuidado personal y belleza"
+    "nombre": "Biografías",
+    "descripcion": "Historias de vida de personajes destacados y sus trayectorias notables",
+    "icono": "Users",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 9,
+    "nombre": "Historia",
+    "descripcion": "Textos históricos sobre acontecimientos, civilizaciones y personajes del pasado",
+    "icono": "Clock",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 10,
+    "nombre": "Filosofía",
+    "descripcion": "Obras filosóficas sobre el pensamiento, la existencia y la naturaleza humana",
+    "icono": "Brain",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 11,
+    "nombre": "Literatura Infantil",
+    "descripcion": "Libros para niños con ilustraciones coloridas y narrativas apropiadas para su edad",
+    "icono": "Baby",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 12,
+    "nombre": "Literatura Juvenil",
+    "descripcion": "Historias para adolescentes que abordan temas de crecimiento y descubrimiento",
+    "icono": "GraduationCap",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 13,
+    "nombre": "Poesía",
+    "descripcion": "Versos y composiciones poéticas de diversos estilos y épocas literarias",
+    "icono": "Feather",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 14,
+    "nombre": "Teatro",
+    "descripcion": "Obras dramáticas y guiones para representaciones escénicas",
+    "icono": "Drama",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 15,
+    "nombre": "Autoayuda",
+    "descripcion": "Libros de desarrollo personal, motivación y mejora de la calidad de vida",
+    "icono": "Lightbulb",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 16,
+    "nombre": "Negocios y Emprendimiento",
+    "descripcion": "Estrategias empresariales, liderazgo y gestión de negocios exitosos",
+    "icono": "TrendingUp",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 17,
+    "nombre": "Ciencia y Naturaleza",
+    "descripcion": "Divulgación científica sobre el universo, la naturaleza y los descubrimientos",
+    "icono": "Globe",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 18,
+    "nombre": "Tecnología",
+    "descripcion": "Avances tecnológicos, programación, inteligencia artificial y transformación digital",
+    "icono": "Zap",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 19,
+    "nombre": "Arte y Diseño",
+    "descripcion": "Historia del arte, técnicas artísticas y diseño visual contemporáneo",
+    "icono": "Palette",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 20,
+    "nombre": "Cocina y Gastronomía",
+    "descripcion": "Recetas, técnicas culinarias y cultura gastronómica de diferentes regiones",
+    "icono": "Coffee",
+    "imagen_url": null
+  },
+  {
+    "categoria_id": 21,
+    "nombre": "Viajes y Aventuras",
+    "descripcion": "Guías de viaje, relatos de exploradores y descubrimiento de culturas",
+    "icono": "Compass",
+    "imagen_url": null
   }
 ]

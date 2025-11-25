@@ -2,11 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { Card, Button } from '../atoms';
 import { DataTable } from '../molecules';
 import { Icon } from '../atoms';
-import type { Venta, Producto, Usuario } from '../../types';
+import type { Venta, Libro, Usuario } from '../../types';
 
 interface SalesReportProps {
   sales: Venta[];
-  products: Producto[];
+  products: Libro[];
   users: Usuario[];
   loading?: boolean;
 }
@@ -61,8 +61,8 @@ const SalesReport: React.FC<SalesReportProps> = ({
     const productSales = new Map<number, { quantity: number; revenue: number }>();
     filteredSales.forEach(sale => {
       sale.detalles?.forEach(detail => {
-        const current = productSales.get(detail.producto_id) || { quantity: 0, revenue: 0 };
-        productSales.set(detail.producto_id, {
+        const current = productSales.get(detail.libro_id) || { quantity: 0, revenue: 0 };
+        productSales.set(detail.libro_id, {
           quantity: current.quantity + detail.cantidad,
           revenue: current.revenue + (detail.cantidad * detail.precio_unitario)
         });
@@ -71,10 +71,10 @@ const SalesReport: React.FC<SalesReportProps> = ({
 
     const topProducts = Array.from(productSales.entries())
       .map(([productId, data]) => {
-        const product = products.find(p => p.producto_id === productId);
+        const product = products.find(p => p.libro_id === productId);
         return {
           productId,
-          productName: product?.nombre || 'Producto desconocido',
+          productName: product?.titulo || 'Libro desconocido',
           quantitySold: data.quantity,
           revenue: data.revenue
         };

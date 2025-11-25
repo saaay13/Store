@@ -1,6 +1,6 @@
 // ==================== USUARIO ====================
 
-export type TipoUsuario = 'cliente' | 'empleado' | 'admin' | 'proveedor';
+export type Rol = "cliente" | "empleado" | "admin" | "proveedor";
 
 export interface Usuario {
   usuario_id: number;
@@ -8,9 +8,9 @@ export interface Usuario {
   telefono: string;
   direccion: string;
   email: string;
-  tipo_usuario: TipoUsuario;
-  nombre_usuario: string | null; // Puede ser null si solo es cliente sin login
-  password_hash: string | null; // Puede ser null si no usa sistema
+  tipo_usuario: Rol;
+  nombre_usuario: string | null;
+  password_hash: string | null;
 }
 
 export interface CrearUsuario {
@@ -18,9 +18,9 @@ export interface CrearUsuario {
   telefono: string;
   direccion: string;
   email: string;
-  tipo_usuario: TipoUsuario;
-  nombre_usuario?: string; // Opcional para clientes sin login
-  password_hash?: string; // Opcional si no usa sistema
+  tipo_usuario: Rol;
+  nombre_usuario?: string;
+  password_hash?: string;
 }
 
 export interface ActualizarUsuario extends Partial<CrearUsuario> {

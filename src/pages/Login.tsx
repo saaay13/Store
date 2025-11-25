@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Input } from '../components/atoms';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/auth';
 
 const Login = () => {
   const navigate = useNavigate();

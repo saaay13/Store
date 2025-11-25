@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Checkbox } from '../atoms';
+import { Checkbox } from '../atoms';
 import { Icon } from '../atoms';
 
 interface Column<T> {
@@ -41,7 +41,6 @@ function DataTable<T extends Record<string, any>>({
 }: DataTableProps<T>) {
   const selectedIds = new Set(selectedRows.map(item => item.id));
   const allSelected = data.length > 0 && data.every(item => selectedIds.has(item.id));
-  const someSelected = data.some(item => selectedIds.has(item.id));
 
   const handleSelectAll = () => {
     onSelectAll?.(!allSelected);

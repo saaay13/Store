@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './features/auth';
 import { TiendaProvider } from './contexts/TiendaContext';
 import { CartProvider } from './features/cart';
+import { UIServiceProvider } from './stores/ui';
 import Layout from './components/templates/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -9,7 +10,9 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProductsPage from './pages/ProductsPage';
 import CartPage from './pages/CartPage';
+import ColorDemo from './pages/ColorDemo';
 import { CheckoutWizard } from './features/checkout';
+import { CategoriesAdminPage } from './pages/admin';
 import { Button, Card, Input, Badge } from './components/atoms';
 
 // Component to show atomic components demo
@@ -202,11 +205,19 @@ const AppRoutes = () => {
           </Layout>
         </ProtectedRoute>
       } />
+      <Route path="/admin/categories" element={
+        <ProtectedRoute>
+          <Layout>
+            <CategoriesAdminPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
       <Route path="/components" element={
         <Layout title="Componentes">
           <ComponentsDemo />
         </Layout>
       } />
+      <Route path="/colors" element={<ColorDemo />} />
       <Route path="/cart" element={
         <Layout title="Carrito de Compras">
           <CartPage />
@@ -226,9 +237,11 @@ function App() {
     <AuthProvider>
       <TiendaProvider>
         <CartProvider>
-          <Router>
-            <AppRoutes />
-          </Router>
+          <UIServiceProvider>
+            <Router>
+              <AppRoutes />
+            </Router>
+          </UIServiceProvider>
         </CartProvider>
       </TiendaProvider>
     </AuthProvider>

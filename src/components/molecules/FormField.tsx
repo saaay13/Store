@@ -1,5 +1,4 @@
 import React from 'react';
-import type { ReactNode } from 'react';
 import Input from '../atoms/Input';
 import Select from '../atoms/Select';
 import Textarea from '../atoms/Textarea';

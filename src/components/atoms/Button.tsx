@@ -1,14 +1,17 @@
 import React from 'react';
+import Spinner from './Spinner';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'danger' | 'outline';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  isLoading?: boolean;
   children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
+  isLoading = false,
   children,
   className = '',
   disabled = false,
@@ -22,6 +25,8 @@ const Button: React.FC<ButtonProps> = ({
     success: 'bg-success text-white hover:bg-green-600 focus:ring-success',
     warning: 'bg-warning text-white hover:bg-yellow-600 focus:ring-warning',
     error: 'bg-error text-white hover:bg-red-600 focus:ring-error',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+    outline: 'bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500',
   };
 
   const sizeClasses = {
@@ -34,8 +39,19 @@ const Button: React.FC<ButtonProps> = ({
 
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
+  const spinnerSizeMap: Record<typeof size, 'xs' | 'sm' | 'md' | 'lg' | 'xl'> = {
+    xs: 'xs',
+    sm: 'xs',
+    md: 'sm',
+    lg: 'md',
+    xl: 'md',
+  };
+
   return (
-    <button className={classes} disabled={disabled} {...props}>
+    <button className={classes} disabled={disabled || isLoading} {...props}>
+      {isLoading && (
+        <Spinner size={spinnerSizeMap[size]} color="white" className="mr-2" />
+      )}
       {children}
     </button>
   );

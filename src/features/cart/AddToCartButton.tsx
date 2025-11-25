@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { useCart } from './CartContext';
-import type { Producto } from '../../types/entities/product';
+import type { Libro } from '../../types';
 
 interface AddToCartButtonProps {
-  product: Producto;
+  libro: Libro;
   quantity?: number;
   className?: string;
   disabled?: boolean;
 }
 
-export const AddToCartButton = ({ product, quantity = 1, className = '', disabled = false }: AddToCartButtonProps) => {
+export const AddToCartButton = ({ libro, quantity = 1, className = '', disabled = false }: AddToCartButtonProps) => {
   const { addToCart } = useCart();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = () => {
     setIsAdding(true);
-    addToCart(product, quantity);
+    addToCart(libro, quantity);
     setTimeout(() => setIsAdding(false), 500); // Brief feedback
   };
 

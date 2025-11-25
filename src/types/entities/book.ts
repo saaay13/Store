@@ -4,6 +4,8 @@ import type { Categoria } from './category';
 import type { Autor } from './author';
 
 export type EstadoLibro = 'disponible' | 'agotado' | 'proximamente' | 'descatalogado';
+export type FormatoLibro = 'Tapa dura' | 'Tapa blanda' | 'eBook' | 'Audiolibro';
+export type IdiomaLibro = 'Español' | 'Inglés' | 'Francés' | 'Alemán' | 'Italiano' | 'Portugués';
 
 export interface Libro {
   libro_id: number;

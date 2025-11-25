@@ -1,8 +1,6 @@
 // ==================== FILTROS PARA BÚSQUEDAS ====================
 
 import type { FormatoLibro, IdiomaLibro, EstadoLibro } from '../entities/book';
-import type { Venta } from '../entities/sale';
-import type { Compra } from '../entities/purchase';
 import type { GeneroLiterario } from '../entities/category';
 
 // Filtro para productos (libros)

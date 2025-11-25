@@ -1,0 +1,54 @@
+{
+  "usuarios": [
+    {
+      "usuario_id": 1,
+      "nombre": "Administrador Principal",
+      "telefono": "555-0001",
+      "direccion": "Av. Principal 123",
+      "email": "admin@store.com",
+      "tipo_usuario": "admin",
+      "nombre_usuario": "admin",
+      "password_hash": "Admin@123"
+    },
+    {
+      "usuario_id": 2,
+      "nombre": "Juan Pérez",
+      "telefono": "555-0002",
+      "direccion": "Calle Secundaria 456",
+      "email": "empleado@store.com",
+      "tipo_usuario": "empleado",
+      "nombre_usuario": "empleado",
+      "password_hash": "Empleado@123"
+    },
+    {
+      "usuario_id": 3,
+      "nombre": "María García",
+      "telefono": "555-0003",
+      "direccion": "Av. Libertad 789",
+      "email": "cliente@store.com",
+      "tipo_usuario": "cliente",
+      "nombre_usuario": "cliente",
+      "password_hash": "Cliente@123"
+    },
+    {
+      "usuario_id": 4,
+      "nombre": "Ana Martínez",
+      "telefono": "555-0004",
+      "direccion": "Calle Norte 654",
+      "email": "empleado2@store.com",
+      "tipo_usuario": "empleado",
+      "nombre_usuario": "empleado2",
+      "password_hash": "Empleado@123"
+    },
+    {
+      "usuario_id": 5,
+      "nombre": "Luis Torres",
+      "telefono": "555-0005",
+      "direccion": "Av. Sur 987",
+      "email": "cliente2@store.com",
+      "tipo_usuario": "cliente",
+      "nombre_usuario": "cliente2",
+      "password_hash": "Cliente@123"
+    }
+  ]
+}

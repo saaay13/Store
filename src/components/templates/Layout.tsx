@@ -56,6 +56,11 @@ const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
                   📦 Productos
                 </Button>
               </Link>
+              <Link to="/admin/categories">
+                <Button variant="secondary" className="w-full justify-start">
+                  📚 Categorías
+                </Button>
+              </Link>
               <Button variant="secondary" className="w-full justify-start">
                 🛒 Ventas
               </Button>

@@ -1,6 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, Input } from '../components/atoms';
+import { Button, Input } from '../components/atoms';
 import { Icon } from '../components/atoms';
 
 const Home = () => {

@@ -1,15 +1,14 @@
 // ==================== REPORTES ====================
 
-import type { Producto } from '../entities/product';
-import type { Categoria } from '../entities/category';
-import type { Venta } from '../entities/sale';
-import type { MetodoPago } from '../entities/payment-method';
+import type { Libro } from "../entities/book";
+import type { Categoria } from "../entities/category";
+import type { MetodoPago } from "../entities/payment-method";
 
 export interface ReporteVentas {
   total_ventas: number;
   total_ingresos: number;
   productos_mas_vendidos: Array<{
-    producto: Producto;
+    producto: Libro;
     cantidad_total: number;
     ingresos_totales: number;
   }>;
@@ -26,7 +25,7 @@ export interface ReporteVentas {
 }
 
 export interface ReporteInventario {
-  productos_bajo_stock: Producto[];
+  productos_bajo_stock: Libro[];
   valor_total_inventario: number;
   productos_por_categoria: Array<{
     categoria: Categoria;

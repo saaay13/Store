@@ -1,6 +1,4 @@
 // Auth feature exports
-export {};
-// export { Login } from './Login';
-// export { Register } from './Register';
-// export { AuthContext } from './AuthContext';
-// export * from './types';
+export { AuthProvider, useAuth } from './AuthContext';
+export { useRoleAuth } from './useRoleAuth';
+export { RoleProtectedRoute } from './RoleProtectedRoute';

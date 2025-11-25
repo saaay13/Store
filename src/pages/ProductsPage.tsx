@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Card, Badge, Spinner } from '../components/atoms';
 import { AddToCartButton } from '../features/cart';
-import { useProducts } from '../contexts/ProductContext';
+import { useTienda } from '../contexts/TiendaContext';
 
 const ProductsPage = () => {
-  const { products, categories, isLoading, error, getCategoryById } = useProducts();
+  const { libros, categorias, isLoading, error, getCategoriaById } = useTienda();
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-  // Filtrar productos por categoría si hay una seleccionada
-  const filteredProducts = selectedCategory
-    ? products.filter(p => p.categoria_id === selectedCategory)
-    : products;
+  // Filtrar libros por categoría si hay una seleccionada
+  const filteredLibros = selectedCategory
+    ? libros.filter(l => l.categoria_id === selectedCategory)
+    : libros;
 
   if (isLoading) {
     return (
@@ -31,8 +31,8 @@ const ProductsPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Productos</h1>
-        <Badge variant="primary">{filteredProducts.length} productos</Badge>
+        <h1 className="text-3xl font-bold text-gray-900">Libros</h1>
+        <Badge variant="primary">{filteredLibros.length} libros</Badge>
       </div>
 
       {/* Filtro por categoría */}
@@ -47,60 +47,60 @@ const ProductsPage = () => {
         >
           Todas
         </button>
-        {categories.map((category) => (
+        {categorias.map((categoria) => (
           <button
-            key={category.categoria_id}
-            onClick={() => setSelectedCategory(category.categoria_id)}
+            key={categoria.categoria_id}
+            onClick={() => setSelectedCategory(categoria.categoria_id)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              selectedCategory === category.categoria_id
+              selectedCategory === categoria.categoria_id
                 ? 'bg-primary text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            {category.nombre}
+            {categoria.nombre}
           </button>
         ))}
       </div>
 
-      {/* Grid de productos */}
-      {filteredProducts.length === 0 ? (
+      {/* Grid de libros */}
+      {filteredLibros.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No hay productos disponibles</p>
+          <p className="text-gray-500 text-lg">No hay libros disponibles</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => {
-            const category = getCategoryById(product.categoria_id);
+          {filteredLibros.map((libro) => {
+            const categoria = getCategoriaById(libro.categoria_id);
             return (
-              <Card key={product.producto_id} className="p-6 hover:shadow-lg transition-shadow">
+              <Card key={libro.libro_id} className="p-6 hover:shadow-lg transition-shadow">
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{product.nombre}</h3>
-                      {category && (
+                      <h3 className="text-lg font-semibold text-gray-900">{libro.titulo}</h3>
+                      {categoria && (
                         <Badge variant="secondary" size="sm">
-                          {category.nombre}
+                          {categoria.nombre}
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">{product.descripcion}</p>
+                    <p className="text-sm text-gray-600 mt-1">{libro.sinopsis}</p>
                   </div>
 
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-2xl font-bold text-primary">
-                        ${product.precio_venta.toFixed(2)}
+                        ${libro.precio_venta.toFixed(2)}
                       </p>
-                      <p className={`text-sm ${product.stock_actual > 10 ? 'text-gray-500' : 'text-warning'}`}>
-                        Stock: {product.stock_actual} {product.unidad_medida}
+                      <p className={`text-sm ${libro.stock_actual > 10 ? 'text-gray-500' : 'text-warning'}`}>
+                        Stock: {libro.stock_actual}
                       </p>
                     </div>
                   </div>
 
                   <AddToCartButton
-                    product={product}
+                    libro={libro}
                     className="w-full"
-                    disabled={product.stock_actual === 0}
+                    disabled={libro.stock_actual === 0}
                   />
                 </div>
               </Card>

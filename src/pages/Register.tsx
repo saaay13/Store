@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Input } from '../components/atoms';
 import { Icon } from '../components/atoms';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/auth';
 
 const Register = () => {
   const navigate = useNavigate();
