@@ -20,20 +20,19 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<Usuario | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // TODO: Check for existing session/token
-    const checkAuth = async () => {
-      // Simulate checking stored token
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
+    // Load user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
         setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('user');
       }
-      setIsLoading(false);
-    };
-
-    checkAuth();
+    }
   }, []);
 
   const login = async (credentials: { nombre_usuario: string; password: string }): Promise<boolean> => {
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Find user by username and password
       const foundUser = usuarios.find(
         (u) => u.nombre_usuario === credentials.nombre_usuario &&
-               u.password_hash === credentials.password
+               (u.password_hash === credentials.password || u.passwordHash === credentials.password)
       );
 
       if (foundUser) {
@@ -61,8 +60,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setIsLoading(false);
         return true;
       }
-
-      setIsLoading(false);
       return false;
     } catch (error) {
       console.error('Login error:', error);

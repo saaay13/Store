@@ -22,7 +22,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<string>('nombre');
+  const [sortBy, setSortBy] = useState<string>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const itemsPerPage = 10;
@@ -87,7 +87,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
   // Columnas de la tabla
   const columns = [
     {
-      key: 'nombre',
+      key: 'name',
       header: 'Nombre',
       sortable: true,
       render: (_: string, cat: Category) => (
@@ -101,8 +101,8 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
       key: 'description',
       header: 'Descripción',
       render: (value: string) => (
-        <span className="text-sm text-muted-foreground truncate block max-w-[250px]">
-          {value && value.length > 200 ? `${value.slice(0, 200)}...` : value || 'Sin descripción detallada'}
+        <span className="text-sm text-muted-foreground">
+          {value && value.length > 100 ? `${value.slice(0, 100)}...` : value}
         </span>
       )
     },

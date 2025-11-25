@@ -97,7 +97,6 @@ export const BookCardVariant2 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
-
   return (
     <div className="group relative cursor-pointer">
       {/* Card con borde y sombra */}
@@ -178,7 +177,6 @@ export const BookCardVariant3 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
-
   return (
     <div className="group relative cursor-pointer">
       {/* Card limpio sin overlay inicial */}
@@ -253,7 +251,6 @@ export const BookCardVariant4 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
-
   return (
     <div className="group cursor-pointer">
       {/* Contenedor con padding para simular marco */}
