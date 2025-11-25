@@ -9,6 +9,7 @@ export interface ShippingInfo {
   email: string;
   direccion: string;
   ciudad: string;
+  ubicacion?: [number, number];
   notas?: string;
 }
 

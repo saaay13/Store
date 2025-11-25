@@ -1,20 +1,27 @@
-import { useState } from 'react';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../cart/CartContext';
-import { Button, Card, Input, Textarea, Radio } from '../../components/atoms';
+import { Button, Card, Input, Textarea, Radio, Badge } from '../../components/atoms';
+import { LocationFormField } from '../../components/molecules';
+import { useUIService } from '../../stores/ui';
 import type { CheckoutStep, CheckoutData, ShippingInfo, PaymentInfo } from '../../types/operations/checkout';
+
+type ShippingFormErrors = Partial<Record<keyof ShippingInfo, string>>;
 
 const CheckoutWizard = () => {
   const navigate = useNavigate();
   const { cart, clearCart } = useCart();
+  const { toast, confirm } = useUIService();
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('shipping');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkoutData, setCheckoutData] = useState<Partial<CheckoutData>>({
     cartItems: cart.items,
-    total: cart.total
+    total: cart.total,
   });
 
   const updateCheckoutData = (data: Partial<CheckoutData>) => {
-    setCheckoutData(prev => ({ ...prev, ...data }));
+    setCheckoutData((prev) => ({ ...prev, ...data }));
   };
 
   const nextStep = () => {
@@ -31,39 +38,56 @@ const CheckoutWizard = () => {
 
   const handleShippingSubmit = (shipping: ShippingInfo) => {
     updateCheckoutData({ shipping });
+    toast.success('Dirección de envío guardada');
     nextStep();
   };
 
   const handlePaymentSubmit = (payment: PaymentInfo) => {
     updateCheckoutData({ payment });
+    toast.info('Método de pago listo');
     nextStep();
   };
 
-  const handleConfirmOrder = async () => {
-    // Aquí iría la lógica para procesar la venta
-    // Por ahora, simulamos
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simular API call
-    clearCart();
-    nextStep();
+  const handleConfirmOrder = () => {
+    const total = checkoutData.total ?? 0;
+    confirm.show({
+      title: 'Confirmar pedido',
+      message: `Confirmas la compra por Bs. ${total.toFixed(2)}?`,
+      confirmText: 'Confirmar pedido',
+      variant: 'info',
+      onConfirm: async () => {
+        setIsSubmitting(true);
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+        clearCart();
+        toast.success('Pedido confirmado 🎉');
+        setIsSubmitting(false);
+        nextStep();
+      },
+    });
   };
 
   const steps = [
     { key: 'shipping', label: 'Envío' },
     { key: 'payment', label: 'Pago' },
     { key: 'review', label: 'Revisar' },
-    { key: 'confirmation', label: 'Confirmación' }
+    { key: 'confirmation', label: 'Confirmación' },
   ];
 
-  const currentStepIndex = steps.findIndex(step => step.key === currentStep);
+  const currentStepIndex = steps.findIndex((step) => step.key === currentStep);
   const progressPercentage = ((currentStepIndex + 1) / steps.length) * 100;
 
   if (cart.items.length === 0 && currentStep !== 'confirmation') {
     return (
-      <div className="max-w-2xl mx-auto p-6">
-        <Card className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Carrito Vacío</h2>
-          <p className="text-gray-600 mb-4">No hay productos en el carrito para proceder al pago.</p>
-          <Button onClick={() => navigate('/products')}>Ir a Productos</Button>
+      <div className="max-w-3xl mx-auto p-6">
+        <Card className="text-center space-y-4">
+          <div className="flex flex-col items-center gap-2">
+            <Badge variant="secondary">Checkout</Badge>
+            <h2 className="text-2xl font-bold">No hay productos</h2>
+            <p className="text-muted-foreground">
+              Agrega libros al carrito para continuar con tu compra.
+            </p>
+          </div>
+          <Button onClick={() => navigate('/products')}>Ir a productos</Button>
         </Card>
       </div>
     );
@@ -71,37 +95,29 @@ const CheckoutWizard = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {/* Progress Bar */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700">
-            Paso {currentStepIndex + 1} de {steps.length}
-          </span>
-          <span className="text-sm font-medium text-gray-700">
-            {Math.round(progressPercentage)}%
-          </span>
+      <header className="mb-8 space-y-3">
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-sm text-muted-foreground">Proceso de compra</p>
+            <h1 className="text-3xl font-bold">Checkout</h1>
+          </div>
+          <Badge variant="primary">{Math.round(progressPercentage)}% completado</Badge>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-muted h-2 rounded-full">
           <div
-            className="bg-blue-500 h-2 rounded-full transition-all duration-300 ease-in-out"
+            className="bg-primary h-2 rounded-full transition-all duration-300 ease-in-out"
             style={{ width: `${progressPercentage}%` }}
-          ></div>
+          />
         </div>
-        <div className="flex justify-between mt-2">
+        <div className="flex justify-between text-xs text-muted-foreground">
           {steps.map((step, index) => (
-            <span
-              key={step.key}
-              className={`text-xs ${
-                index <= currentStepIndex ? 'text-blue-600 font-medium' : 'text-gray-400'
-              }`}
-            >
+            <span key={step.key} className={index <= currentStepIndex ? 'text-primary font-semibold' : ''}>
               {step.label}
             </span>
           ))}
         </div>
-      </div>
+      </header>
 
-      {/* Step Content */}
       <Card className="p-6">
         {currentStep === 'shipping' && (
           <ShippingStep
@@ -117,11 +133,12 @@ const CheckoutWizard = () => {
             onBack={prevStep}
           />
         )}
-        {currentStep === 'review' && (
+        {currentStep === 'review' && checkoutData.shipping && checkoutData.payment && checkoutData.cartItems && (
           <ReviewStep
             data={checkoutData as CheckoutData}
             onSubmit={handleConfirmOrder}
             onBack={prevStep}
+            isSubmitting={isSubmitting}
           />
         )}
         {currentStep === 'confirmation' && (
@@ -135,24 +152,32 @@ const CheckoutWizard = () => {
   );
 };
 
-const ShippingStep = ({ initialData, onSubmit, onBack }: {
+const ShippingStep = ({
+  initialData,
+  onSubmit,
+  onBack,
+}: {
   initialData?: ShippingInfo;
   onSubmit: (data: ShippingInfo) => void;
   onBack: () => void;
 }) => {
-  const [formData, setFormData] = useState<ShippingInfo>(initialData || {
-    nombre: '',
-    telefono: '',
-    email: '',
-    direccion: '',
-    ciudad: '',
-    notas: ''
-  });
+  const { toast } = useUIService();
+  const [formData, setFormData] = useState<ShippingInfo>(
+    initialData || {
+      nombre: '',
+      telefono: '',
+      email: '',
+      direccion: '',
+      ciudad: '',
+      ubicacion: undefined,
+      notas: '',
+    }
+  );
 
-  const [errors, setErrors] = useState<Partial<ShippingInfo>>({});
+  const [errors, setErrors] = useState<ShippingFormErrors>({});
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<ShippingInfo> = {};
+    const newErrors: ShippingFormErrors = {};
 
     if (!formData.nombre.trim()) newErrors.nombre = 'Nombre es requerido';
     if (!formData.telefono.trim()) newErrors.telefono = 'Teléfono es requerido';
@@ -160,8 +185,12 @@ const ShippingStep = ({ initialData, onSubmit, onBack }: {
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email inválido';
     if (!formData.direccion.trim()) newErrors.direccion = 'Dirección es requerida';
     if (!formData.ciudad.trim()) newErrors.ciudad = 'Ciudad es requerida';
+    if (!formData.ubicacion) newErrors.ubicacion = 'Selecciona tu ubicacion en el mapa';
 
     setErrors(newErrors);
+    if (Object.keys(newErrors).length) {
+      toast.error('Revisa los campos marcados');
+    }
     return Object.keys(newErrors).length === 0;
   };
 
@@ -173,125 +202,151 @@ const ShippingStep = ({ initialData, onSubmit, onBack }: {
   };
 
   const handleChange = (field: keyof ShippingInfo, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
+  const handleLocationChange = (coords: [number, number]) => {
+    setFormData((prev) => ({ ...prev, ubicacion: coords }));
+    if (errors.ubicacion) {
+      setErrors((prev) => ({ ...prev, ubicacion: undefined }));
+    }
+  };
+
+
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-6">Información de Envío</h2>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold">Información de envío</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre completo *
-            </label>
+          <Field
+            label="Nombre completo *"
+            error={errors.nombre}
+            input={
+              <Input
+                value={formData.nombre}
+                onChange={(e) => handleChange('nombre', e.target.value)}
+                variant={errors.nombre ? 'error' : 'default'}
+                placeholder="Ingresa tu nombre completo"
+                required
+              />
+            }
+          />
+          <Field
+            label="Teléfono *"
+            error={errors.telefono}
+            input={
+              <Input
+                type="tel"
+                value={formData.telefono}
+                onChange={(e) => handleChange('telefono', e.target.value)}
+                variant={errors.telefono ? 'error' : 'default'}
+                placeholder="+591 70000000"
+                required
+              />
+            }
+          />
+        </div>
+
+        <Field
+          label="Email *"
+          error={errors.email}
+          input={
             <Input
-              value={formData.nombre}
-              onChange={(e) => handleChange('nombre', e.target.value)}
-              variant={errors.nombre ? 'error' : undefined}
-              placeholder="Ingresa tu nombre completo"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleChange('email', e.target.value)}
+              variant={errors.email ? 'error' : 'default'}
+              placeholder="Ingresa tu correo electrónico"
               required
             />
-            {errors.nombre && <p className="text-red-500 text-sm mt-1">{errors.nombre}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Teléfono *
-            </label>
+          }
+        />
+
+        <Field
+          label="Dirección completa *"
+          error={errors.direccion}
+          input={
             <Input
-              type="tel"
-              value={formData.telefono}
-              onChange={(e) => handleChange('telefono', e.target.value)}
-              variant={errors.telefono ? 'error' : undefined}
-              placeholder="Ingresa tu número de teléfono"
+              value={formData.direccion}
+              onChange={(e) => handleChange('direccion', e.target.value)}
+              variant={errors.direccion ? 'error' : 'default'}
+              placeholder="Calle, número, referencia"
               required
             />
-            {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono}</p>}
-          </div>
-        </div>
+          }
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email *
-          </label>
-          <Input
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-            variant={errors.email ? 'error' : undefined}
-            placeholder="Ingresa tu correo electrónico"
-            required
-          />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-        </div>
+        <Field
+          label="Ciudad *"
+          error={errors.ciudad}
+          input={
+            <Input
+              value={formData.ciudad}
+              onChange={(e) => handleChange('ciudad', e.target.value)}
+              variant={errors.ciudad ? 'error' : 'default'}
+              placeholder="Ciudad o localidad"
+              required
+            />
+          }
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Dirección completa *
-          </label>
-          <Input
-            value={formData.direccion}
-            onChange={(e) => handleChange('direccion', e.target.value)}
-            variant={errors.direccion ? 'error' : undefined}
-            placeholder="Ingresa tu dirección completa"
-            required
-          />
-          {errors.direccion && <p className="text-red-500 text-sm mt-1">{errors.direccion}</p>}
-        </div>
+        <LocationFormField
+          label="Ubicacion en el mapa *"
+          name="shipping-location"
+          value={formData.ubicacion}
+          onChange={handleLocationChange}
+          error={errors.ubicacion}
+          helperText="Marca el punto de entrega o usa tu ubicacion actual."
+          required
+          mapHeight="300px"
+          showManualInput
+          className="pt-2"
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ciudad *
-          </label>
-          <Input
-            value={formData.ciudad}
-            onChange={(e) => handleChange('ciudad', e.target.value)}
-            variant={errors.ciudad ? 'error' : undefined}
-            placeholder="Ingresa tu ciudad"
-            required
-          />
-          {errors.ciudad && <p className="text-red-500 text-sm mt-1">{errors.ciudad}</p>}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Notas adicionales (opcional)
-          </label>
-          <Textarea
-            value={formData.notas || ''}
-            onChange={(e) => handleChange('notas', e.target.value)}
-            placeholder="Instrucciones especiales de entrega..."
-          />
-        </div>
+        <Field
+          label="Notas adicionales (opcional)"
+          input={
+            <Textarea
+              value={formData.notas || ''}
+              onChange={(e) => handleChange('notas', e.target.value)}
+              placeholder="Instrucciones especiales de entrega..."
+            />
+          }
+        />
 
         <div className="flex justify-between pt-6">
           <Button type="button" variant="secondary" onClick={onBack}>
-            Volver al Carrito
+            Volver al carrito
           </Button>
-          <Button type="submit">
-            Continuar al Pago
-          </Button>
+          <Button type="submit">Continuar al pago</Button>
         </div>
       </form>
     </div>
   );
 };
 
-const PaymentStep = ({ initialData, onSubmit, onBack }: {
+const PaymentStep = ({
+  initialData,
+  onSubmit,
+  onBack,
+}: {
   initialData?: PaymentInfo;
   onSubmit: (data: PaymentInfo) => void;
   onBack: () => void;
 }) => {
-  const [formData, setFormData] = useState<PaymentInfo>(initialData || {
-    metodo_pago_id: 1,
-    numero_tarjeta: '',
-    fecha_expiracion: '',
-    cvv: '',
-    nombre_tarjeta: ''
-  });
+  const { toast } = useUIService();
+  const [formData, setFormData] = useState<PaymentInfo>(
+    initialData || {
+      metodo_pago_id: 1,
+      numero_tarjeta: '',
+      fecha_expiracion: '',
+      cvv: '',
+      nombre_tarjeta: '',
+    }
+  );
 
   const [errors, setErrors] = useState<Partial<PaymentInfo>>({});
 
@@ -300,14 +355,13 @@ const PaymentStep = ({ initialData, onSubmit, onBack }: {
     { id: 2, name: 'Tarjeta de Crédito/Débito', description: 'Visa, Mastercard, etc.' },
     { id: 3, name: 'Transferencia Bancaria', description: 'Pago por transferencia' },
     { id: 4, name: 'QR', description: 'Pago mediante código QR' },
-    { id: 5, name: 'Fiado', description: 'Pago posterior acordado' }
+    { id: 5, name: 'Fiado', description: 'Pago posterior acordado' },
   ];
 
   const validateForm = (): boolean => {
     const newErrors: Partial<PaymentInfo> = {};
 
     if (formData.metodo_pago_id === 2) {
-      // Validar campos de tarjeta
       if (!formData.numero_tarjeta?.trim()) newErrors.numero_tarjeta = 'Número de tarjeta requerido';
       if (!formData.fecha_expiracion?.trim()) newErrors.fecha_expiracion = 'Fecha de expiración requerida';
       if (!formData.cvv?.trim()) newErrors.cvv = 'CVV requerido';
@@ -315,6 +369,9 @@ const PaymentStep = ({ initialData, onSubmit, onBack }: {
     }
 
     setErrors(newErrors);
+    if (Object.keys(newErrors).length) {
+      toast.error('Completa los datos de la tarjeta');
+    }
     return Object.keys(newErrors).length === 0;
   };
 
@@ -326,28 +383,27 @@ const PaymentStep = ({ initialData, onSubmit, onBack }: {
   };
 
   const handleMethodChange = (metodo_pago_id: number) => {
-    setFormData(prev => ({ ...prev, metodo_pago_id }));
+    setFormData((prev) => ({ ...prev, metodo_pago_id }));
     setErrors({});
   };
 
   const handleCardChange = (field: keyof PaymentInfo, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-6">Método de Pago</h2>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold">Método de pago</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Payment Methods */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-muted-foreground">
             Selecciona un método de pago *
           </label>
           {paymentMethods.map((method) => (
-            <div key={method.id} className="flex items-start">
+            <div key={method.id} className="flex items-start gap-3 rounded-lg border border-border p-3">
               <Radio
                 id={`payment-${method.id}`}
                 name="payment-method"
@@ -355,82 +411,81 @@ const PaymentStep = ({ initialData, onSubmit, onBack }: {
                 onChange={() => handleMethodChange(method.id)}
                 className="mt-1"
               />
-              <div className="ml-3">
+              <div>
                 <label
                   htmlFor={`payment-${method.id}`}
-                  className="text-sm font-medium text-gray-700 cursor-pointer"
+                  className="text-sm font-medium cursor-pointer"
                 >
                   {method.name}
                 </label>
-                <p className="text-sm text-gray-500">{method.description}</p>
+                <p className="text-sm text-muted-foreground">{method.description}</p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Card Details */}
         {formData.metodo_pago_id === 2 && (
           <div className="border-t pt-6 space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Detalles de la Tarjeta</h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Número de tarjeta *
-              </label>
-              <Input
-                value={formData.numero_tarjeta || ''}
-                onChange={(e) => handleCardChange('numero_tarjeta', e.target.value)}
-                variant={errors.numero_tarjeta ? 'error' : undefined}
-                placeholder="1234 5678 9012 3456"
-                maxLength={19}
-                required
-              />
-              {errors.numero_tarjeta && <p className="text-red-500 text-sm mt-1">{errors.numero_tarjeta}</p>}
-            </div>
+            <h3 className="text-lg font-medium text-foreground">Detalles de la tarjeta</h3>
+            <Field
+              label="Número de tarjeta *"
+              error={errors.numero_tarjeta}
+              input={
+                <Input
+                  value={formData.numero_tarjeta || ''}
+                  onChange={(e) => handleCardChange('numero_tarjeta', e.target.value)}
+                  variant={errors.numero_tarjeta ? 'error' : 'default'}
+                  placeholder="1234 5678 9012 3456"
+                  maxLength={19}
+                  required
+                />
+              }
+            />
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de expiración *
-                </label>
-                <Input
-                  value={formData.fecha_expiracion || ''}
-                  onChange={(e) => handleCardChange('fecha_expiracion', e.target.value)}
-                  variant={errors.fecha_expiracion ? 'error' : undefined}
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  required
-                />
-                {errors.fecha_expiracion && <p className="text-red-500 text-sm mt-1">{errors.fecha_expiracion}</p>}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  CVV *
-                </label>
-                <Input
-                  value={formData.cvv || ''}
-                  onChange={(e) => handleCardChange('cvv', e.target.value)}
-                  variant={errors.cvv ? 'error' : undefined}
-                  placeholder="123"
-                  maxLength={4}
-                  required
-                />
-                {errors.cvv && <p className="text-red-500 text-sm mt-1">{errors.cvv}</p>}
-              </div>
+              <Field
+                label="Fecha de expiración *"
+                error={errors.fecha_expiracion}
+                input={
+                  <Input
+                    value={formData.fecha_expiracion || ''}
+                    onChange={(e) => handleCardChange('fecha_expiracion', e.target.value)}
+                    variant={errors.fecha_expiracion ? 'error' : 'default'}
+                    placeholder="MM/YY"
+                    maxLength={5}
+                    required
+                  />
+                }
+              />
+              <Field
+                label="CVV *"
+                error={errors.cvv}
+                input={
+                  <Input
+                    value={formData.cvv || ''}
+                    onChange={(e) => handleCardChange('cvv', e.target.value)}
+                    variant={errors.cvv ? 'error' : 'default'}
+                    placeholder="123"
+                    maxLength={4}
+                    required
+                  />
+                }
+              />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre en la tarjeta *
-              </label>
-              <Input
-                value={formData.nombre_tarjeta || ''}
-                onChange={(e) => handleCardChange('nombre_tarjeta', e.target.value)}
-                variant={errors.nombre_tarjeta ? 'error' : undefined}
-                placeholder="Como aparece en la tarjeta"
-                required
-              />
-              {errors.nombre_tarjeta && <p className="text-red-500 text-sm mt-1">{errors.nombre_tarjeta}</p>}
-            </div>
+            <Field
+              label="Nombre en la tarjeta *"
+              error={errors.nombre_tarjeta}
+              input={
+                <Input
+                  value={formData.nombre_tarjeta || ''}
+                  onChange={(e) => handleCardChange('nombre_tarjeta', e.target.value)}
+                  variant={errors.nombre_tarjeta ? 'error' : 'default'}
+                  placeholder="Como aparece en la tarjeta"
+                  required
+                />
+              }
+            />
           </div>
         )}
 
@@ -438,44 +493,48 @@ const PaymentStep = ({ initialData, onSubmit, onBack }: {
           <Button type="button" variant="secondary" onClick={onBack}>
             Atrás
           </Button>
-          <Button type="submit">
-            Continuar a Revisión
-          </Button>
+          <Button type="submit">Continuar a revisión</Button>
         </div>
       </form>
     </div>
   );
 };
 
-const ReviewStep = ({ data, onSubmit, onBack }: {
+const ReviewStep = ({
+  data,
+  onSubmit,
+  onBack,
+  isSubmitting,
+}: {
   data: CheckoutData;
   onSubmit: () => void;
   onBack: () => void;
+  isSubmitting: boolean;
 }) => {
   const paymentMethods = [
     { id: 1, name: 'Efectivo' },
     { id: 2, name: 'Tarjeta de Crédito/Débito' },
     { id: 3, name: 'Transferencia Bancaria' },
     { id: 4, name: 'QR' },
-    { id: 5, name: 'Fiado' }
+    { id: 5, name: 'Fiado' },
   ];
 
-  const selectedPaymentMethod = paymentMethods.find(m => m.id === data.payment.metodo_pago_id);
+  const selectedPaymentMethod = paymentMethods.find((m) => m.id === data.payment.metodo_pago_id);
+  const total = useMemo(() => data.total ?? 0, [data.total]);
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-6">Revisar Pedido</h2>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold">Revisar pedido</h2>
 
       <div className="space-y-6">
-        {/* Shipping Information */}
-        <div className="border rounded-lg p-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Información de Envío</h3>
+        <Card className="border border-border p-4">
+          <h3 className="text-lg font-medium mb-3">Informaci?n de env?o</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-medium">Nombre:</span> {data.shipping.nombre}
             </div>
             <div>
-              <span className="font-medium">Teléfono:</span> {data.shipping.telefono}
+              <span className="font-medium">Tel?fono:</span> {data.shipping.telefono}
             </div>
             <div>
               <span className="font-medium">Email:</span> {data.shipping.email}
@@ -485,67 +544,103 @@ const ReviewStep = ({ data, onSubmit, onBack }: {
             </div>
           </div>
           <div className="mt-2 text-sm">
-            <span className="font-medium">Dirección:</span> {data.shipping.direccion}
+            <span className="font-medium">Direcci?n:</span> {data.shipping.direccion}
           </div>
+          {data.shipping.ubicacion && (
+            <div className="mt-2 text-sm">
+              <span className="font-medium">Ubicacion:</span>{' '}
+              {`${data.shipping.ubicacion[0].toFixed(5)}, ${data.shipping.ubicacion[1].toFixed(5)}`}
+            </div>
+          )}
           {data.shipping.notas && (
             <div className="mt-2 text-sm">
               <span className="font-medium">Notas:</span> {data.shipping.notas}
             </div>
           )}
-        </div>
+        </Card>
 
-        {/* Payment Information */}
-        <div className="border rounded-lg p-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Método de Pago</h3>
+        <Card className="border border-border p-4">
+          <h3 className="text-lg font-medium mb-3">Método de pago</h3>
           <div className="text-sm">
             <span className="font-medium">Método:</span> {selectedPaymentMethod?.name}
           </div>
           {data.payment.metodo_pago_id === 2 && (
             <div className="mt-2 text-sm">
-              <div><span className="font-medium">Tarjeta:</span> **** **** **** {data.payment.numero_tarjeta?.slice(-4)}</div>
-              <div><span className="font-medium">Nombre:</span> {data.payment.nombre_tarjeta}</div>
+              <div>
+                <span className="font-medium">Tarjeta:</span> **** **** ****{' '}
+                {data.payment.numero_tarjeta?.slice(-4)}
+              </div>
+              <div>
+                <span className="font-medium">Nombre:</span> {data.payment.nombre_tarjeta}
+              </div>
             </div>
           )}
-        </div>
+        </Card>
 
-        {/* Order Items */}
-        <div className="border rounded-lg p-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Libros</h3>
+        <Card className="border border-border p-4">
+          <h3 className="text-lg font-medium mb-3">Libros</h3>
           <div className="space-y-3">
             {data.cartItems.map((item) => (
-              <div key={item.book.bookId ?? item.book.libro_id} className="flex justify-between items-center text-sm">
+              <div
+                key={item.book.bookId ?? item.book.libro_id}
+                className="flex justify-between items-center text-sm"
+              >
                 <div className="flex-1">
                   <span className="font-medium">{item.book.title ?? item.book.titulo}</span>
-                  <span className="text-gray-500 ml-2">x{item.quantity}</span>
+                  <span className="text-muted-foreground ml-2">x{item.quantity}</span>
                 </div>
-                <span className="font-medium">Bs. {((item.book.price ?? item.book.precio_venta ?? 0) * item.quantity).toFixed(2)}</span>
+                <span className="font-medium">
+                  Bs. {((item.book.price ?? item.book.precio_venta ?? 0) * item.quantity).toFixed(2)}
+                </span>
               </div>
             ))}
           </div>
           <div className="border-t mt-3 pt-3 flex justify-between items-center font-semibold">
             <span>Total:</span>
-            <span>Bs. {data.total.toFixed(2)}</span>
+            <span>Bs. {total.toFixed(2)}</span>
           </div>
-        </div>
+        </Card>
       </div>
 
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-between mt-2">
         <Button variant="secondary" onClick={onBack}>
           Atrás
         </Button>
-        <Button onClick={onSubmit}>
-          Confirmar Pedido
+        <Button onClick={onSubmit} isLoading={isSubmitting}>
+          Confirmar pedido
         </Button>
       </div>
     </div>
   );
 };
 
-const ConfirmationStep = ({ onContinue }: any) => (
-  <div className="text-center">
-    <h2 className="text-xl font-semibold mb-4">¡Pedido Confirmado!</h2>
-    <p className="text-gray-600 mb-4">Tu pedido ha sido procesado exitosamente.</p>
-    <Button onClick={onContinue}>Continuar Comprando</Button>
+const ConfirmationStep = ({ data, onContinue }: { data: CheckoutData; onContinue: () => void }) => (
+  <div className="text-center space-y-4">
+    <h2 className="text-2xl font-semibold">¡Pedido confirmado!</h2>
+    <p className="text-muted-foreground">
+      Gracias por tu compra. Enviaremos la confirmación a {data.shipping?.email ?? 'tu correo'}.
+    </p>
+    <div className="bg-muted rounded-lg p-4 inline-block">
+      <p className="font-semibold">Total pagado: Bs. {(data.total ?? 0).toFixed(2)}</p>
+      <p className="text-sm text-muted-foreground">Seguiremos informándote por email.</p>
+    </div>
+    <Button onClick={onContinue}>Volver a la tienda</Button>
+  </div>
+);
+
+const Field = ({
+  label,
+  error,
+  input,
+}: {
+  label: string;
+  error?: string;
+  input: React.ReactNode;
+}) => (
+  <div className="space-y-1">
+    <label className="block text-sm font-medium text-muted-foreground">{label}</label>
+    {input}
+    {error && <p className="text-error text-sm">{error}</p>}
   </div>
 );
 

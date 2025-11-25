@@ -37,7 +37,7 @@ const Map: React.FC<MapProps> = ({
   ...mapContainerProps
 }) => {
   return (
-    <div className={`rounded-lg overflow-hidden border border-border ${className}`} style={{ height }}>
+    <div className={`relative z-0 rounded-lg overflow-hidden border border-border ${className}`} style={{ height }}>
       <MapContainer
         center={center}
         zoom={zoom}

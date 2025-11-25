@@ -72,7 +72,12 @@ L.Icon.Default.mergeOptions({
 
 ## Componentes de Mapas
 
-El proyecto incluye dos componentes siguiendo la arquitectura atómica:
+El proyecto incluye cuatro componentes siguiendo la arquitectura atómica:
+
+- **Map** (Atom): Componente base de mapa reutilizable
+- **StoreLocationsMap** (Molecule): Mapa especializado para sucursales
+- **LocationPicker** (Molecule): Selector interactivo de ubicación
+- **LocationFormField** (Molecule): Campo de formulario con mapa integrado
 
 ### 1. Map (Atom) - Componente Base
 
@@ -204,6 +209,258 @@ const locations: StoreLocation[] = [
 [Nombre de la Sucursal]
 [Dirección], [Ciudad] | [Horarios]
 ```
+
+---
+
+### 3. LocationPicker (Molecule) - Selector de Ubicación
+
+**Ubicación:** `src/components/molecules/LocationPicker.tsx`
+
+Componente interactivo para seleccionar coordenadas geográficas en un mapa. Ideal para formularios donde el usuario necesita especificar una ubicación.
+
+#### Props
+
+```typescript
+interface LocationPickerProps {
+  value?: [number, number];           // Coordenadas actuales [lat, lng]
+  onChange: (coords: [number, number]) => void;  // Callback al cambiar
+  defaultCenter?: [number, number];   // Centro inicial del mapa
+  zoom?: number;                      // Nivel de zoom inicial
+  height?: string;                    // Altura del mapa (CSS)
+  className?: string;                 // Clases adicionales
+  disabled?: boolean;                 // Deshabilitar interacción
+  showCoordinates?: boolean;          // Mostrar coordenadas debajo del mapa
+  showCurrentLocationButton?: boolean; // Mostrar botón de geolocalización
+}
+```
+
+#### Valores por Defecto
+
+- **defaultCenter**: `[-17.3935, -66.1570]` (Cochabamba)
+- **zoom**: `13`
+- **height**: `"400px"`
+- **showCoordinates**: `true`
+- **showCurrentLocationButton**: `true`
+
+#### Funcionalidades
+
+✅ **Click en el Mapa**: Coloca el marcador en la ubicación clickeada
+✅ **Marcador Arrastrable**: Arrastra y suelta para ajustar la posición
+✅ **Geolocalización**: Botón "Usar mi ubicación" con GPS del navegador
+✅ **Display de Coordenadas**: Muestra lat/lng en tiempo real
+✅ **Controlled Component**: Integración perfecta con formularios
+✅ **Manejo de Errores**: Mensajes claros si geolocalización falla
+
+#### Ejemplo Básico
+
+```tsx
+import { useState } from 'react';
+import { LocationPicker } from '../components/molecules';
+
+function MyComponent() {
+  const [location, setLocation] = useState<[number, number]>([-17.3935, -66.1570]);
+
+  return (
+    <LocationPicker
+      value={location}
+      onChange={setLocation}
+      height="400px"
+      showCurrentLocationButton={true}
+    />
+  );
+}
+```
+
+#### Ejemplo en Formulario
+
+```tsx
+const [formData, setFormData] = useState({
+  name: '',
+  address: '',
+  coordinates: [-17.3935, -66.1570] as [number, number]
+});
+
+const handleLocationChange = (coords: [number, number]) => {
+  setFormData(prev => ({ ...prev, coordinates: coords }));
+};
+
+<form>
+  <input
+    type="text"
+    value={formData.name}
+    onChange={e => setFormData({...formData, name: e.target.value})}
+  />
+
+  <LocationPicker
+    value={formData.coordinates}
+    onChange={handleLocationChange}
+    height="350px"
+  />
+</form>
+```
+
+---
+
+### 4. LocationFormField (Molecule) - Campo de Formulario para Ubicación
+
+**Ubicación:** `src/components/molecules/LocationFormField.tsx`
+
+FormField especializado que integra `LocationPicker` con el sistema de formularios del proyecto. Incluye label, validación, mensajes de error y opción de entrada manual de coordenadas.
+
+#### Props
+
+```typescript
+interface LocationFormFieldProps {
+  label: string;                      // Etiqueta del campo
+  name: string;                       // Nombre del campo (para forms)
+  value?: [number, number];           // Coordenadas actuales
+  onChange: (coords: [number, number]) => void;  // Callback
+  error?: string;                     // Mensaje de error
+  helperText?: string;                // Texto de ayuda
+  required?: boolean;                 // Campo requerido
+  disabled?: boolean;                 // Deshabilitar campo
+  mapHeight?: string;                 // Altura del mapa
+  defaultCenter?: [number, number];   // Centro inicial
+  showManualInput?: boolean;          // Mostrar campos de entrada manual
+  className?: string;
+}
+```
+
+#### Valores por Defecto
+
+- **mapHeight**: `"400px"`
+- **defaultCenter**: `[-17.3935, -66.1570]`
+- **required**: `false`
+- **showManualInput**: `false`
+
+#### Características Únicas
+
+✅ **Integración con FormField**: Mismo estilo visual que otros campos del formulario
+✅ **Entrada Manual Opcional**: Toggle para mostrar campos lat/lng editables
+✅ **Validación Automática**: Valida rango de coordenadas (-90/90, -180/180)
+✅ **Mensajes de Error**: Display consistente con otros FormFields
+✅ **Label y Required**: Indica campos obligatorios con asterisco
+✅ **Helper Text**: Texto descriptivo debajo del campo
+
+#### Ejemplo Completo
+
+```tsx
+import { useState } from 'react';
+import { LocationFormField } from '../components/molecules';
+import { Button } from '../components/atoms';
+import type { StoreLocation } from '../types';
+
+function CreateStoreForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    city: '',
+    phone: '',
+    email: '',
+  });
+
+  const [location, setLocation] = useState<[number, number]>([-17.3935, -66.1570]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validación
+    const newErrors: Record<string, string> = {};
+    if (!formData.name) newErrors.name = 'El nombre es requerido';
+    if (!location) newErrors.location = 'Debe seleccionar una ubicación';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Crear objeto StoreLocation
+    const newStore: Partial<StoreLocation> = {
+      ...formData,
+      latitude: location[0],
+      longitude: location[1],
+      isPrimary: false
+    };
+
+    // Enviar a API
+    await createStore(newStore);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <FormField
+        label="Nombre de la Sucursal"
+        name="name"
+        value={formData.name}
+        onChange={(e) => setFormData({...formData, name: e.target.value})}
+        error={errors.name}
+        required
+      />
+
+      <FormField
+        label="Dirección"
+        name="address"
+        value={formData.address}
+        onChange={(e) => setFormData({...formData, address: e.target.value})}
+        required
+      />
+
+      <LocationFormField
+        label="Ubicación en el mapa"
+        name="location"
+        value={location}
+        onChange={setLocation}
+        error={errors.location}
+        helperText="Haz clic en el mapa o arrastra el marcador para seleccionar la ubicación exacta"
+        mapHeight="450px"
+        showManualInput={true}
+        required
+      />
+
+      <FormField
+        label="Teléfono"
+        name="phone"
+        type="tel"
+        value={formData.phone}
+        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+        required
+      />
+
+      <Button type="submit">Crear Sucursal</Button>
+    </form>
+  );
+}
+```
+
+#### Entrada Manual de Coordenadas
+
+Cuando `showManualInput={true}`, el usuario puede:
+
+1. Click en "Entrada manual de coordenadas" para mostrar campos
+2. Escribir latitud y longitud directamente
+3. Click en "Aplicar coordenadas" para actualizar el mapa
+4. La validación se ejecuta automáticamente
+
+```tsx
+<LocationFormField
+  label="Ubicación"
+  name="location"
+  value={location}
+  onChange={setLocation}
+  showManualInput={true}  // Habilita entrada manual
+/>
+```
+
+#### Validación de Coordenadas
+
+El componente valida automáticamente:
+
+- **Latitud**: Debe estar entre -90 y 90
+- **Longitud**: Debe estar entre -180 y 180
+- **Formato**: Deben ser números válidos
+
+Mensajes de error se muestran automáticamente si la validación falla.
 
 ---
 

@@ -15,6 +15,7 @@ Esta carpeta contiene toda la documentación técnica del proyecto de librería 
 - **[Sistema de Colores](./COLOR-SYSTEM-GUIDE.md)** - Guía completa del sistema de colores con soporte para dark mode ⭐
 - **[Guía de Estilos de Home](./HOME-PAGE-STYLES-GUIDE.md)** - Implementación visual de la página principal
 - **[Sistema de UI/UX](./UI-SERVICE-IMPLEMENTATION-GUIDE.md)** - Toasts, modales y sistema de feedback
+- **[Guía de Mapas](./MAPS-GUIDE.md)** - Integración de Leaflet y componentes de mapas interactivos
 
 ### 📊 Modelado de Datos
 
@@ -46,6 +47,7 @@ Documentación del sistema de tipos y entidades del dominio:
 1. **Colores y temas:** [COLOR-SYSTEM-GUIDE.md](./COLOR-SYSTEM-GUIDE.md)
 2. **Página Home:** [HOME-PAGE-STYLES-GUIDE.md](./HOME-PAGE-STYLES-GUIDE.md)
 3. **Feedback de UI:** [UI-SERVICE-IMPLEMENTATION-GUIDE.md](./UI-SERVICE-IMPLEMENTATION-GUIDE.md)
+4. **Mapas interactivos:** [MAPS-GUIDE.md](./MAPS-GUIDE.md)
 
 ### Para Entender el Dominio
 
@@ -63,7 +65,9 @@ docs/
 ├── Design System & UI
 │   ├── COLOR-SYSTEM-GUIDE.md         # Sistema de colores y dark mode
 │   ├── HOME-PAGE-STYLES-GUIDE.md     # Estilos de la home
-│   └── UI-SERVICE-IMPLEMENTATION-GUIDE.md  # Toasts y modales
+│   ├── UI-SERVICE-IMPLEMENTATION-GUIDE.md  # Toasts y modales
+│   ├── MAPS-GUIDE.md                 # Mapas interactivos con Leaflet
+│   └── FORM-GUIDE.md                 # Guía de formularios
 │
 ├── Modelado de Datos
 │   └── modeling/
@@ -111,6 +115,7 @@ Ver [Sistema de Colores](./COLOR-SYSTEM-GUIDE.md) para más detalles.
 **Fecha:** Noviembre 2025
 
 ### Cambios Recientes
+- ✅ Guía de mapas con Leaflet (MAPS-GUIDE.md)
 - ✅ Nuevo sistema de colores con soporte para dark mode
 - ✅ Índice general de documentación (README.md)
 - ✅ Guías de UI/UX y feedback

@@ -45,13 +45,15 @@ Components are organized following atomic design methodology:
 
 ```
 src/components/
-├── atoms/        # Basic building blocks (11 components)
+├── atoms/        # Basic building blocks (12 components)
 │   ├── Button, Input, Card, Badge, Alert
 │   ├── Checkbox, Radio, Select, Textarea
-│   └── Icon, Spinner
-├── molecules/    # Composed components (7 components)
+│   ├── Icon, Spinner, Map
+│   └── ThemeToggle
+├── molecules/    # Composed components (8 components)
 │   ├── DataTable, Dialog, Dropdown, FormField
 │   ├── IconPicker, Modal, Pagination, SearchBar
+│   └── StoreLocationsMap
 ├── organisms/    # Complex components (5 components)
 │   ├── CategoriesTable, CategoryForm
 │   ├── InventoryTable, ProductForm, SalesReport
@@ -114,9 +116,10 @@ types/
 - **Libro**: `libro_id`, `isbn`, `titulo`, `sinopsis`, `nombre_editorial`, `autor_id`, `categoria_id`, `precio_venta`, `stock_actual`, `idioma`, `formato`
 - **Autor**: `autor_id`, `nombre`, `biografia`, `nacionalidad`, `fecha_nacimiento`, `foto_url`
 - **Categoria**: `categoria_id`, `nombre`, `descripcion`, `icono`, `imagen_url` (simplified - no genre classification)
+- **StoreLocation**: `locationId`, `name`, `address`, `city`, `latitude`, `longitude`, `phone`, `email`, `openingHours`, `isPrimary`
 - **Venta/Compra**: Include details arrays with `DetalleVenta[]`/`DetalleCompra[]`
 
-Import types from the central barrel: `import type { Usuario, Libro, Autor, Categoria, CrearVenta } from '@/types'`
+Import types from the central barrel: `import type { Usuario, Libro, Autor, Categoria, StoreLocation, CrearVenta } from '@/types'`
 
 ### Context Providers
 Three main contexts wrap the application:
@@ -303,7 +306,8 @@ Key relationships:
 - Authentication is mocked (accepts any credentials)
 - No backend API integration yet - data is mock/localStorage only
 - Cart and checkout are fully functional with localStorage persistence
-- All 11 atoms, 6 molecules, and 3 organisms are implemented
+- All 12 atoms, 8 molecules, and 5 organisms are implemented
+- Interactive maps with Leaflet for store locations
 
 ### Future Backend Integration
 When adding real API:
@@ -433,6 +437,79 @@ import { Plus, Pencil, Trash2, Search, BookOpen } from 'lucide-react';
 **DO NOT use:**
 - Emoji icons (✏️, 🗑️, ➕) - Use Lucide instead
 - Icon atom component with emoji - Only for legacy compatibility
+
+### Maps & Location Services
+
+**Documentación completa:** Ver `docs/MAPS-GUIDE.md`
+
+Este proyecto usa **Leaflet** para mapas interactivos a través de componentes React.
+
+#### Dependencias Instaladas
+
+```bash
+npm install leaflet react-leaflet
+npm install -D @types/leaflet
+```
+
+#### Componentes Disponibles
+
+**Map (Atom)** - `src/components/atoms/Map.tsx`
+- Componente base reutilizable para cualquier mapa
+- Props: `center`, `zoom`, `markers`, `height`, `className`
+- Integrado con sistema de colores del proyecto
+
+**StoreLocationsMap (Molecule)** - `src/components/molecules/StoreLocationsMap.tsx`
+- Componente especializado para mostrar sucursales
+- Calcula centro automáticamente basado en ubicaciones
+- Props: `locations`, `height`, `defaultZoom`, `defaultCenter`
+
+#### Uso Básico
+
+```tsx
+import { StoreLocationsMap } from '../components/molecules';
+import type { StoreLocation } from '../types';
+
+const locations: StoreLocation[] = [
+  {
+    locationId: 1,
+    name: "Sucursal Principal",
+    address: "Calle Colombia #1069",
+    city: "Cochabamba",
+    latitude: -17.3935,
+    longitude: -66.1570,
+    phone: "+591 4 4234567",
+    isPrimary: true
+  }
+];
+
+<StoreLocationsMap
+  locations={locations}
+  height="500px"
+  defaultZoom={12}
+/>
+```
+
+#### Tipo StoreLocation
+
+Definido en `src/types/entities/store-location.ts`:
+- `locationId`: Identificador único
+- `name`: Nombre de la sucursal
+- `address`, `city`: Dirección completa
+- `latitude`, `longitude`: Coordenadas geográficas (formato: [lat, lng])
+- `phone`, `email`: Contacto
+- `openingHours`: Horarios de atención
+- `isPrimary`: Indica si es la sucursal principal
+
+#### Características
+
+- ✅ Mapas base de OpenStreetMap (gratuito)
+- ✅ Marcadores interactivos con popups
+- ✅ Centro automático basado en múltiples ubicaciones
+- ✅ Integrado con modo oscuro
+- ✅ Responsive y accesible
+- ✅ Fix de iconos incluido para Vite
+
+**Ejemplo en producción:** Ver `src/pages/Home.tsx:347-409`
 
 ### UI Feedback: UIService
 

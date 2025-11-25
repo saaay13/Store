@@ -27,6 +27,7 @@ Este documento muestra cómo se relacionan todos los archivos de documentación 
     │   │   └─→ Referencias:
     │   │       ├── UI-SERVICE-IMPLEMENTATION-GUIDE.md
     │   │       ├── HOME-PAGE-STYLES-GUIDE.md
+    │   │       ├── MAPS-GUIDE.md
     │   │       └── CLAUDE.md
     │   │
     │   ├── 📄 UI-SERVICE-IMPLEMENTATION-GUIDE.md
@@ -34,9 +35,15 @@ Este documento muestra cómo se relacionan todos los archivos de documentación 
     │   │   ├── Modales de confirmación
     │   │   └─→ Usa: COLOR-SYSTEM-GUIDE.md
     │   │
-    │   └── 📄 HOME-PAGE-STYLES-GUIDE.md
-    │       ├── Estructura de la Home
-    │       ├── Componentes visuales
+    │   ├── 📄 HOME-PAGE-STYLES-GUIDE.md
+    │   │   ├── Estructura de la Home
+    │   │   ├── Componentes visuales
+    │   │   └─→ Usa: COLOR-SYSTEM-GUIDE.md
+    │   │
+    │   └── 📄 MAPS-GUIDE.md
+    │       ├── Integración de Leaflet
+    │       ├── Componentes Map y StoreLocationsMap
+    │       ├── Tipo StoreLocation
     │       └─→ Usa: COLOR-SYSTEM-GUIDE.md
     │
     ├── 📊 MODELADO DE DATOS
@@ -104,7 +111,11 @@ Este documento muestra cómo se relacionan todos los archivos de documentación 
 3. docs/HOME-PAGE-STYLES-GUIDE.md
    └─→ Estructura y componentes visuales
    ↓
-4. Implementar componente
+4. docs/MAPS-GUIDE.md (si necesitas mapas)
+   ├─→ Componentes Map y StoreLocationsMap
+   └─→ Integración de Leaflet
+   ↓
+5. Implementar componente
 ```
 
 ### Para Entender el Dominio
@@ -154,9 +165,20 @@ Este documento muestra cómo se relacionan todos los archivos de documentación 
 **Es referenciado por:**
 - COLOR-SYSTEM-GUIDE.md
 - README.md
+- MAPS-GUIDE.md
 
 **Referencia a:**
 - COLOR-SYSTEM-GUIDE.md (sistema de colores)
+
+### MAPS-GUIDE.md
+**Es referenciado por:**
+- CLAUDE.md (sección de componentes)
+- README.md
+
+**Referencia a:**
+- COLOR-SYSTEM-GUIDE.md (sistema de colores)
+- HOME-PAGE-STYLES-GUIDE.md (implementación en home)
+- modeling/entidades.md (tipo StoreLocation)
 
 ---
 
@@ -168,6 +190,7 @@ Este documento muestra cómo se relacionan todos los archivos de documentación 
 |-------|---------------------|------------------------|
 | **Crear componente UI** | COLOR-SYSTEM-GUIDE.md | UI-SERVICE-IMPLEMENTATION-GUIDE.md, HOME-PAGE-STYLES-GUIDE.md |
 | **Implementar feedback** | UI-SERVICE-IMPLEMENTATION-GUIDE.md | COLOR-SYSTEM-GUIDE.md |
+| **Agregar mapas** | MAPS-GUIDE.md | COLOR-SYSTEM-GUIDE.md, modeling/entidades.md |
 | **Trabajar con datos** | modeling/entidades.md | productos-sistema-completo.md, modeling/api.md |
 | **Onboarding general** | CLAUDE.md | README.md, COLOR-SYSTEM-GUIDE.md |
 | **Diseñar página** | HOME-PAGE-STYLES-GUIDE.md | COLOR-SYSTEM-GUIDE.md |
@@ -214,11 +237,11 @@ Este documento muestra cómo se relacionan todos los archivos de documentación 
 
 | Tipo | Cantidad | Ubicación |
 |------|----------|-----------|
-| **Guías de Design System** | 3 | docs/ (raíz) |
+| **Guías de Design System** | 4 | docs/ (raíz) |
 | **Documentación de Modelado** | 4 | docs/modeling/ |
 | **Sistemas Técnicos** | 3 | docs/ (raíz) |
 | **Documentación Principal** | 2 | / y docs/ |
-| **TOTAL** | 12 | - |
+| **TOTAL** | 13 | - |
 
 ---
 

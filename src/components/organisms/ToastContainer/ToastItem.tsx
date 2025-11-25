@@ -11,32 +11,32 @@ const variantStyles: Record<
   { bg: string; border: string; icon: string; text: string; shadow: string }
 > = {
   success: {
-    bg: "bg-green-500/10 dark:bg-green-400/15",
-    border: "!border-green-500/20 dark:!border-green-400/25",
-    icon: "text-green-600 dark:text-green-400",
-    text: "text-green-900 dark:text-green-950",
-    shadow: "shadow-xl shadow-green-500/10 dark:shadow-green-400/20",
+    bg: "bg-success/10",
+    border: "!border-success/20",
+    icon: "text-success",
+    text: "text-foreground",
+    shadow: "shadow-xl shadow-success/10",
   },
   error: {
-    bg: "bg-red-500/10 dark:bg-red-400/15",
-    border: "!border-red-500/20 dark:!border-red-400/25",
-    icon: "text-red-600 dark:text-red-400",
-    text: "text-red-900 dark:text-red-950",
-    shadow: "shadow-xl shadow-red-500/10 dark:shadow-red-400/20",
+    bg: "bg-error/10",
+    border: "!border-error/20",
+    icon: "text-error",
+    text: "text-foreground",
+    shadow: "shadow-xl shadow-error/10",
   },
   warning: {
-    bg: "bg-amber-500/10 dark:bg-amber-400/15",
-    border: "!border-amber-500/20 dark:!border-amber-400/25",
-    icon: "text-amber-600 dark:text-amber-400",
-    text: "text-amber-900 dark:text-amber-950",
-    shadow: "shadow-xl shadow-amber-500/10 dark:shadow-amber-400/20",
+    bg: "bg-warning/10",
+    border: "!border-warning/20",
+    icon: "text-warning",
+    text: "text-foreground",
+    shadow: "shadow-xl shadow-warning/10",
   },
   info: {
-    bg: "bg-blue-500/10 dark:bg-blue-400/15",
-    border: "!border-blue-500/20 dark:!border-blue-400/25",
-    icon: "text-blue-600 dark:text-blue-400",
-    text: "text-blue-900 dark:text-blue-950",
-    shadow: "shadow-xl shadow-blue-500/10 dark:shadow-blue-400/20",
+    bg: "bg-info/10",
+    border: "!border-info/20",
+    icon: "text-info",
+    text: "text-foreground",
+    shadow: "shadow-xl shadow-info/10",
   },
 };
 
@@ -145,7 +145,7 @@ export function ToastItem({ toast, onRemove }: ToastItemProps) {
 
         <button
           onClick={handleClose}
-          className="flex-shrink-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors hover:scale-110"
+          className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors hover:scale-110"
           aria-label="Cerrar notificación"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
