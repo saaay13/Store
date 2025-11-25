@@ -71,11 +71,16 @@ export const seedBooksIfEmpty = async (
   limit: number = 100
 ): Promise<StoredData & { seeded: boolean }> => {
   const existing = readStoredData();
+<<<<<<< HEAD
   // Forzar recarga completa de autores para asegurar datos actualizados
   if (existing.books.length > 0) {
     // Solo mantener libros, forzar recarga de autores y categorías
     existing.authors = [];
     existing.categories = [];
+=======
+  if (existing.books.length > 0) {
+    return { ...existing, seeded: false };
+>>>>>>> 5dd0a12edb31ae2c991160b380cc82b2985e5ef9
   }
 
   const [books, categories, authors] = await Promise.all([
