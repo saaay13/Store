@@ -6,3 +6,4 @@ export { default as IconPicker } from './IconPicker';
 export { default as Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';
 export { default as Pagination } from './Pagination';
 export { default as SearchBar } from './SearchBar';
+export { default as StoreLocationsMap } from './StoreLocationsMap';

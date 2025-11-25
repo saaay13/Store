@@ -1,5 +1,4 @@
 import type { Author, Category, Book } from "../types";
-import { fetchGoogleBooks, mapGoogleVolumesToDomain } from "./googleBooks";
 
 const STORAGE_KEYS = {
   books: "store_books",
@@ -69,31 +68,32 @@ export const persistStoredData = (data: StoredData) => {
 };
 
 export const seedBooksIfEmpty = async (
-  limit: number = 40
+  limit: number = 100
 ): Promise<StoredData & { seeded: boolean }> => {
   const existing = readStoredData();
   if (existing.books.length > 0) {
     return { ...existing, seeded: false };
   }
 
-  // Si se requieren más de 20, hacemos paginación en lotes de 20
-  const batches = Math.ceil(limit / 20);
-  const volumes = [];
+  const [books, categories, authors] = await Promise.all([
+    fetch("/data/books.seed.json").then((res) => res.json() as Promise<Book[]>),
+    fetch("/data/categories.seed.json").then(
+      (res) => res.json() as Promise<Category[]>
+    ),
+    fetch("/data/authors.seed.json").then(
+      (res) => res.json() as Promise<Author[]>
+    ),
+  ]);
 
-  for (let i = 0; i < batches; i += 1) {
-    const batch = await fetchGoogleBooks(20, {
-      language: "es",
-      subject: "ficcion",
-      startIndex: i * 20,
-    });
-    volumes.push(...batch);
-  }
+  const trimmedBooks = books.slice(0, limit);
+  const seeded: StoredData = {
+    books: trimmedBooks,
+    categories,
+    authors,
+  };
 
-  const trimmed = volumes.slice(0, limit);
-  const mapped = mapGoogleVolumesToDomain(trimmed);
-  persistStoredData(mapped);
-
-  return { ...mapped, seeded: true };
+  persistStoredData(seeded);
+  return { ...seeded, seeded: true };
 };
 
 export const refreshFromStorage = (): StoredData => readStoredData();

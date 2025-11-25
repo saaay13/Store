@@ -1,28 +1,84 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge, Spinner } from "../components/atoms";
-import {
-  BookCardVariant1,
-  BookCardVariant2,
-  BookCardVariant3,
-  BookCardVariant4,
-} from "../components/organisms";
+import { SearchBar, Pagination } from "../components/molecules";
+import { BookCardVariant2 } from "../components/organisms";
 import { useStore } from "../contexts/StoreContext";
 
 const ProductsPage = () => {
   const {
     books,
     categories,
+    authors,
     isLoading,
     error,
     getCategoryById,
     getAuthorById,
   } = useStore();
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedAuthor, setSelectedAuthor] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
-  // Filtrar libros por categoría si hay una seleccionada
-  const filteredBooks = selectedCategory
-    ? books.filter((book) => book.categoryId === selectedCategory)
-    : books;
+  const normalize = (value?: string | null) =>
+    (value ?? "").toLowerCase().trim();
+
+  const filteredBooks = useMemo(() => {
+    return books.filter((book) => {
+      const normalizedQuery = normalize(searchQuery);
+      const categoryMatch =
+        !selectedCategory || book.categoryId?.toString() === selectedCategory;
+      const authorMatch =
+        !selectedAuthor ||
+        (book.authorId ?? book.autor_id)?.toString() === selectedAuthor;
+
+      if (!normalizedQuery) {
+        return categoryMatch && authorMatch;
+      }
+
+      const authorId = book.authorId ?? book.autor_id;
+      const authorName = authorId ? getAuthorById(authorId)?.name ?? "" : "";
+      const categoryName = getCategoryById(book.categoryId)?.name ?? "";
+      const haystack = [
+        normalize(book.title ?? book.titulo),
+        normalize(book.isbn),
+        normalize(authorName),
+        normalize(categoryName),
+      ].join(" ");
+
+      return categoryMatch && authorMatch && haystack.includes(normalizedQuery);
+    });
+  }, [books, searchQuery, selectedCategory, selectedAuthor, getAuthorById, getCategoryById]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredBooks.length / itemsPerPage)
+  );
+
+  const paginatedBooks = useMemo(
+    () =>
+      filteredBooks.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      ),
+    [filteredBooks, currentPage]
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const handleSearch = useCallback(
+    (query: string, filters: Record<string, any>) => {
+      setSearchQuery(query);
+      setSelectedCategory(filters.category || "");
+      setSelectedAuthor(filters.author || "");
+      setCurrentPage(1);
+    },
+    []
+  );
 
   if (isLoading) {
     return (
@@ -42,37 +98,39 @@ const ProductsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h1 className="text-3xl font-bold text-gray-900">Libros</h1>
         <Badge variant="primary">{filteredBooks.length} libros</Badge>
       </div>
 
-      {/* Filtro por categoría */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => setSelectedCategory(null)}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            selectedCategory === null
-              ? "bg-primary text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          Todas
-        </button>
-        {categories.map((category) => (
-          <button
-            key={category.categoryId}
-            onClick={() => setSelectedCategory(category.categoryId)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              selectedCategory === category.categoryId
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            {category.name}
-          </button>
-        ))}
-      </div>
+      <SearchBar
+        placeholder="Buscar por título, ISBN o autor..."
+        filters={[
+          {
+            key: "category",
+            label: "Categoría",
+            options: [
+              { value: "", label: "Todas las categorías" },
+              ...categories.map((cat) => ({
+                value: cat.categoryId.toString(),
+                label: cat.name,
+              })),
+            ],
+          },
+          {
+            key: "author",
+            label: "Autor",
+            options: [
+              { value: "", label: "Todos los autores" },
+              ...authors.map((author) => ({
+                value: author.authorId.toString(),
+                label: author.name,
+              })),
+            ],
+          },
+        ]}
+        onSearch={handleSearch}
+      />
 
       {/* Grid de libros */}
       {filteredBooks.length === 0 ? (
@@ -81,7 +139,7 @@ const ProductsPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredBooks.map((book) => {
+          {paginatedBooks.map((book) => {
             const categoryId = book.categoryId;
             const categoria = categoryId
               ? getCategoryById(categoryId)
@@ -102,6 +160,15 @@ const ProductsPage = () => {
           })}
         </div>
       )}
+
+      {/* Paginación */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredBooks.length}
+        itemsPerPage={itemsPerPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };

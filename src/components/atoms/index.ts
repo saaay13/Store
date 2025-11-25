@@ -5,6 +5,7 @@ export { default as Card } from './Card';
 export { default as Checkbox } from './Checkbox';
 export { default as Icon } from './Icon';
 export { default as Input } from './Input';
+export { default as Map } from './Map';
 export { default as Radio } from './Radio';
 export { default as Select } from './Select';
 export { default as Spinner } from './Spinner';

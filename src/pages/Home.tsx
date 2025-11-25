@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Icon, Input, Spinner, ThemeToggle } from "../components/atoms";
+import { StoreLocationsMap } from "../components/molecules";
 import { BookCardVariant2 } from "../components/organisms";
 import { useStore } from "../contexts/StoreContext";
+import type { StoreLocation } from "../types";
 
 type CategoryCardData = {
   name: string;
@@ -41,6 +43,48 @@ const fallbackCategories: CategoryCardData[] = [
   { name: "Poesia", link: "/products?category=poesia", image: "/img/libros3.png" },
   { name: "Ingles", link: "/products?category=ingles", image: "/img/cuentos.png" },
   { name: "Nacionales", link: "/products?category=nacionales", image: "/img/libros2.png" },
+];
+
+const storeLocations: StoreLocation[] = [
+  {
+    locationId: 1,
+    name: "Librería Libros - Sucursal Principal",
+    address: "Calle Colombia entre Aurelio Meleán y Julio Arauco #1069",
+    city: "Cochabamba",
+    phone: "+591 4 4234567",
+    email: "info@libros.com.bo",
+    latitude: -17.3935,
+    longitude: -66.1570,
+    openingHours: "Lun-Vie: 10:00-13:00 / 15:00-19:00 | Sáb: 10:00-13:00",
+    description: "Nuestra sucursal principal en el centro de Cochabamba",
+    isPrimary: true,
+  },
+  {
+    locationId: 2,
+    name: "Librería Libros - Zona Norte",
+    address: "Av. Blanco Galindo Km 4.5",
+    city: "Cochabamba",
+    phone: "+591 4 4234568",
+    email: "norte@libros.com.bo",
+    latitude: -17.3700,
+    longitude: -66.1700,
+    openingHours: "Lun-Vie: 10:00-19:00 | Sáb: 10:00-14:00",
+    description: "Sucursal en la zona norte con amplio estacionamiento",
+    isPrimary: false,
+  },
+  {
+    locationId: 3,
+    name: "Librería Libros - Zona Sur",
+    address: "Av. Libertador Simón Bolívar",
+    city: "Cochabamba",
+    phone: "+591 4 4234569",
+    email: "sur@libros.com.bo",
+    latitude: -17.4200,
+    longitude: -66.1500,
+    openingHours: "Lun-Vie: 10:00-19:00 | Sáb-Dom: 10:00-14:00",
+    description: "Sucursal en la zona sur, abierta fines de semana",
+    isPrimary: false,
+  },
 ];
 
 const Home = () => {
@@ -300,14 +344,67 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Visit Us Section */}
+      {/* Store Locations Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-3xl font-bold">Ven a conocernos</h2>
-          <p className="text-lg text-muted-foreground">
-            Contamos con los mejores libros originales de literatura universal, latinoamericana, juvenil, infantil y nacional.
-          </p>
-          <Button size="lg" variant="secondary" onClick={() => navigate("/ubicacion")}>Ver ubicación</Button>
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="text-center space-y-4">
+            <p className="text-sm uppercase tracking-[0.25em] text-primary font-semibold">Nuestras Sucursales</p>
+            <h2 className="text-3xl font-bold">Visítanos en cualquiera de nuestras ubicaciones</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Contamos con tres sucursales en Cochabamba con los mejores libros originales de literatura universal,
+              latinoamericana, juvenil, infantil y nacional.
+            </p>
+          </div>
+
+          {/* Map */}
+          <div className="w-full">
+            <StoreLocationsMap
+              locations={storeLocations}
+              height="500px"
+              defaultZoom={12}
+            />
+          </div>
+
+          {/* Store Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {storeLocations.map((location) => (
+              <Card key={location.locationId} className="space-y-4">
+                {location.isPrimary && (
+                  <span className="inline-block px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                    Sucursal Principal
+                  </span>
+                )}
+                <div>
+                  <h3 className="text-lg font-semibold">{location.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {location.address}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{location.city}</p>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-start gap-2">
+                    <Icon name="clock" size="sm" className="mt-0.5 text-primary" />
+                    <span className="text-muted-foreground">{location.openingHours}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon name="phone" size="sm" className="text-primary" />
+                    <span className="text-muted-foreground">{location.phone}</span>
+                  </div>
+                  {location.email && (
+                    <div className="flex items-center gap-2">
+                      <Icon name="mail" size="sm" className="text-primary" />
+                      <span className="text-muted-foreground">{location.email}</span>
+                    </div>
+                  )}
+                </div>
+                {location.description && (
+                  <p className="text-sm text-muted-foreground border-t border-border pt-4">
+                    {location.description}
+                  </p>
+                )}
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 

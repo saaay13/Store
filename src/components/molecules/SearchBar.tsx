@@ -47,7 +47,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }, 250);
 
     return () => window.clearTimeout(timeoutId);
-  }, [query, filterValues, onSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, filterValues]);
 
   const clearFilters = () => {
     setQuery('');

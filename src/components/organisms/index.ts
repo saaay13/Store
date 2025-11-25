@@ -5,6 +5,8 @@ export { default as InventoryTable } from './InventoryTable';
 export { default as ProductForm } from './ProductForm';
 export { default as SalesReport } from './SalesReport';
 export { ToastContainer } from './ToastContainer';
+export { default as BooksTable } from './BooksTable';
+export { default as BookForm } from './BookForm';
 export {
   BookCardVariant1,
   BookCardVariant2,

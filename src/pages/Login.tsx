@@ -1,34 +1,34 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { BookOpen, LogIn, AlertCircle } from 'lucide-react';
+import { BookOpen, LogIn } from 'lucide-react';
 import { Button, Card, ThemeToggle } from '../components/atoms';
 import { FormField } from '../components/molecules';
 import { useAuth } from '../features/auth';
+import { useUIService } from '../stores/ui';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { toast } = useUIService();
   const [formData, setFormData] = useState({
     nombre_usuario: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       const success = await login(formData);
       if (success) {
         navigate('/dashboard');
       } else {
-        setError('Credenciales incorrectas');
+        toast.error('Credenciales incorrectas. Por favor verifica tu usuario y contraseña.');
       }
     } catch (err) {
-      setError('Error al iniciar sesión');
+      toast.error('Error al iniciar sesión. Intenta nuevamente.');
     } finally {
       setLoading(false);
     }
@@ -82,13 +82,6 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
           />
-
-          {error && (
-            <div className="bg-error/10 border border-error rounded-md p-3 flex items-start space-x-2">
-              <AlertCircle size={18} className="text-error mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-error">{error}</p>
-            </div>
-          )}
 
           <Button
             type="submit"

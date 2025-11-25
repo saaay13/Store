@@ -14,6 +14,7 @@ import CartPage from './pages/CartPage';
 import ColorDemo from './pages/ColorDemo';
 import { CheckoutWizard } from './features/checkout';
 import { CategoriesAdminPage } from './pages/admin';
+import BooksAdminPage from './pages/admin/BooksAdminPage';
 import { Button, Card, Input, Badge } from './components/atoms';
 
 // Component to show atomic components demo
@@ -210,6 +211,13 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <Layout>
             <CategoriesAdminPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/books" element={
+        <ProtectedRoute>
+          <Layout>
+            <BooksAdminPage />
           </Layout>
         </ProtectedRoute>
       } />

@@ -19,6 +19,7 @@ import { Button, Badge } from '../atoms';
 import { ThemeToggle } from '../atoms/ThemeToggle';
 import { useCart } from '../../features/cart';
 import { useAuth } from '../../features/auth';
+import { useRoleAuth } from '../../features/auth/useRoleAuth';
 
 interface LayoutProps {
   children: ReactNode;
@@ -29,6 +30,7 @@ interface LayoutProps {
 const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
   const { cart } = useCart();
   const { user, logout } = useAuth();
+  const { isAdmin, isCliente } = useRoleAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const totalItems = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
@@ -42,16 +44,20 @@ const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(`${path}/`);
 
-  const navItems = [
-    { to: '/dashboard', label: 'Dashboard', icon: Home },
-    { to: '/products', label: 'Productos', icon: Package },
-    { to: '/admin/categories', label: 'Categorías', icon: BookMarked },
-    { to: '/cart', label: `Carrito${totalItems ? ` (${totalItems})` : ''}`, icon: ShoppingCart },
-    { label: 'Ventas', icon: ShoppingBag, disabled: true },
-    { label: 'Reportes', icon: BarChart3, disabled: true },
-    { label: 'Usuarios', icon: Users, disabled: true },
-    { label: 'Configuración', icon: Settings, disabled: true },
-  ];
+  const navItems = isAdmin
+    ? [
+        { to: '/dashboard', label: 'Dashboard', icon: Home },
+        { to: '/admin/books', label: 'Libros', icon: BookOpen },
+        { to: '/admin/categories', label: 'Categorias', icon: BookMarked },
+        { label: 'Usuarios', icon: Users, disabled: true },
+        { label: 'Ventas', icon: ShoppingBag, disabled: true },
+        { label: 'Reportes', icon: BarChart3, disabled: true },
+        { label: 'Configuracion', icon: Settings, disabled: true },
+      ]
+    : [
+        { to: '/products', label: 'Libros', icon: Package },
+        { to: '/cart', label: `Carrito${totalItems ? ` (${totalItems})` : ''}`, icon: ShoppingCart },
+      ];
 
   const renderNavItem = (item: (typeof navItems)[number]) => {
     const active = item.to ? isActive(item.to) : false;
@@ -124,17 +130,19 @@ const Layout = ({ children, title, showSidebar = true }: LayoutProps) => {
               {/* Theme Toggle */}
               <ThemeToggle size="md" />
 
-              {/* Cart */}
-              <Link to="/cart">
-                <Button variant="secondary" size="sm" className="relative">
-                  <ShoppingCart size={18} />
-                  {totalItems > 0 && (
-                    <Badge variant="error" size="sm" className="absolute -top-1 -right-1 min-w-[20px] h-5 flex items-center justify-center">
-                      {totalItems}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
+              {/* Cart (solo clientes) */}
+              {isCliente && (
+                <Link to="/cart">
+                  <Button variant="secondary" size="sm" className="relative">
+                    <ShoppingCart size={18} />
+                    {totalItems > 0 && (
+                      <Badge variant="error" size="sm" className="absolute -top-1 -right-1 min-w-[20px] h-5 flex items-center justify-center">
+                        {totalItems}
+                      </Badge>
+                    )}
+                  </Button>
+                </Link>
+              )}
 
               {/* User Info */}
               <div className="hidden sm:flex items-center space-x-3 pl-3 border-l border-border">

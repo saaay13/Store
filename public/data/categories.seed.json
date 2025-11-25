@@ -1,0 +1,247 @@
+[
+  {
+    "categoryId": 1,
+    "name": "Ficción",
+    "description": "Ficción",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 2,
+    "name": "Navarra",
+    "description": "Navarra",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 3,
+    "name": "No ficción juvenil",
+    "description": "No ficción juvenil",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 4,
+    "name": "Viajes",
+    "description": "Viajes",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 5,
+    "name": "Biografía y autobiografía",
+    "description": "Biografía y autobiografía",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 6,
+    "name": "Brasil",
+    "description": "Brasil",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 7,
+    "name": "Ficción cubana",
+    "description": "Ficción cubana",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 8,
+    "name": "Novela",
+    "description": "Novela",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 9,
+    "name": "Armagedón",
+    "description": "Armagedón",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 10,
+    "name": "Educación",
+    "description": "Educación",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 11,
+    "name": "Ficción en español",
+    "description": "Ficción en español",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 12,
+    "name": "Juvenile Fiction",
+    "description": "Juvenile Fiction",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 13,
+    "name": "Short stories, Spanish",
+    "description": "Short stories, Spanish",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 14,
+    "name": "Large type books",
+    "description": "Large type books",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 15,
+    "name": "Comics & Graphic Novels",
+    "description": "Comics & Graphic Novels",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 16,
+    "name": "General",
+    "description": "General",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 17,
+    "name": "American fiction",
+    "description": "American fiction",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 18,
+    "name": "Christmas stories",
+    "description": "Christmas stories",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 19,
+    "name": "Literary Collections",
+    "description": "Literary Collections",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 20,
+    "name": "Antiques & Collectibles",
+    "description": "Antiques & Collectibles",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 21,
+    "name": "Clavichord",
+    "description": "Clavichord",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 22,
+    "name": "Children's stories, Argentine",
+    "description": "Children's stories, Argentine",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 23,
+    "name": "England",
+    "description": "England",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 24,
+    "name": "Fantasia",
+    "description": "Fantasia",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 25,
+    "name": "Ave Maris Stella (Music)",
+    "description": "Ave Maris Stella (Music)",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 26,
+    "name": "Canons, fugues, etc. (Piano)",
+    "description": "Canons, fugues, etc. (Piano)",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 27,
+    "name": "Affect (Psychology)",
+    "description": "Affect (Psychology)",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 28,
+    "name": "Clarinet and piano music",
+    "description": "Clarinet and piano music",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 29,
+    "name": "Music",
+    "description": "Music",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 30,
+    "name": "Allemandes",
+    "description": "Allemandes",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 31,
+    "name": "Advent music",
+    "description": "Advent music",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 32,
+    "name": "Canons, fugues, etc. (Organ)",
+    "description": "Canons, fugues, etc. (Organ)",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 33,
+    "name": "Ballades (Instrumental music)",
+    "description": "Ballades (Instrumental music)",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 34,
+    "name": "Canons, fugues, etc. (Violin)",
+    "description": "Canons, fugues, etc. (Violin)",
+    "icon": null,
+    "imageUrl": null
+  },
+  {
+    "categoryId": 35,
+    "name": "Chamber music",
+    "description": "Chamber music",
+    "icon": null,
+    "imageUrl": null
+  }
+]

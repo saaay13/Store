@@ -52,6 +52,12 @@ export type {
   PurchaseStatus,
 } from "./entities/purchase";
 
+export type {
+  StoreLocation,
+  CreateStoreLocation,
+  UpdateStoreLocation,
+} from "./entities/store-location";
+
 // CRUD operations
 export type * from "./operations/create";
 export type * from "./operations/update";

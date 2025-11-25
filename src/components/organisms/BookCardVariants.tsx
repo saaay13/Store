@@ -1,6 +1,7 @@
+import { useState, type MouseEvent } from "react";
 import type { Book } from "../../types";
 import { Badge } from "../atoms";
-import { AddToCartButton } from "../../features/cart";
+import { AddToCartButton, useCart } from "../../features/cart";
 import { ShoppingCart, BookOpen } from "lucide-react";
 
 interface BookCardProps {
@@ -19,7 +20,7 @@ export const BookCardVariant1 = ({
 }: BookCardProps) => {
   return (
     <div className="group relative cursor-pointer">
-      {/* Card principal con elevación en hover */}
+      {/* Card principal con elevacion en hover */}
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2">
         {/* Imagen de portada con zoom en hover */}
         {coverUrl ? (
@@ -63,7 +64,7 @@ export const BookCardVariant1 = ({
           </div>
         </div>
 
-        {/* Badge de categoría siempre visible */}
+        {/* Badge de categoria siempre visible */}
         {category && (
           <div className="absolute top-2 left-2 z-10">
             <Badge
@@ -77,7 +78,7 @@ export const BookCardVariant1 = ({
         )}
       </div>
 
-      {/* Botón integrado debajo, visible en hover */}
+      {/* Boton integrado debajo, visible en hover */}
       <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <AddToCartButton
           book={book}
@@ -96,10 +97,21 @@ export const BookCardVariant2 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (book.stock === 0 || isAdding) return;
+    setIsAdding(true);
+    addToCart(book, 1);
+    setTimeout(() => setIsAdding(false), 500);
+  };
+
   return (
     <div className="group relative cursor-pointer">
       {/* Card con borde y sombra */}
-      <div className="relative aspect-[3/4]  overflow-hidden border-2 border-gray-200 bg-white transition-all duration-300 group-hover:border-primary group-hover:shadow-xl group-hover:scale-105">
+      <div className="relative aspect-[3/4] overflow-hidden border-2 border-gray-200 bg-white transition-all duration-300 group-hover:border-primary group-hover:shadow-xl group-hover:scale-105">
         {/* Imagen de portada */}
         {coverUrl ? (
           <img
@@ -120,7 +132,7 @@ export const BookCardVariant2 = ({
           </span>
         </div>
 
-        {/* Badge de categoría con mejor contraste */}
+        {/* Badge de categoria con mejor contraste */}
         {category && (
           <div className="absolute top-3 left-3">
             <span className="inline-block bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
@@ -129,7 +141,7 @@ export const BookCardVariant2 = ({
           </div>
         )}
 
-        {/* Título siempre visible en la parte inferior con degradado verde suave */}
+        {/* Titulo siempre visible en la parte inferior con degradado verde suave */}
         <div
           className="absolute bottom-0 left-0 right-0 pt-12 pb-3 px-4 transition-all duration-300 group-hover:pb-6 group-hover:pt-20"
           style={{
@@ -149,13 +161,14 @@ export const BookCardVariant2 = ({
         <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
           <button
             className="w-12 h-12 rounded-full bg-white text-primary border-2 border-primary shadow-lg hover:bg-primary hover:text-white hover:scale-110 transition-all duration-200 flex items-center justify-center disabled:bg-gray-200 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Aquí iría la lógica de agregar al carrito
-            }}
-            disabled={book.stock === 0}
+            onClick={handleAddToCart}
+            disabled={book.stock === 0 || isAdding}
           >
-            <ShoppingCart size={24} />
+            {isAdding ? (
+              <span className="text-xs font-semibold">Agregado</span>
+            ) : (
+              <ShoppingCart size={24} />
+            )}
           </button>
         </div>
 
@@ -182,6 +195,17 @@ export const BookCardVariant3 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (book.stock === 0 || isAdding) return;
+    setIsAdding(true);
+    addToCart(book, 1);
+    setTimeout(() => setIsAdding(false), 500);
+  };
+
   return (
     <div className="group relative cursor-pointer">
       {/* Card limpio sin overlay inicial */}
@@ -237,12 +261,17 @@ export const BookCardVariant3 = ({
               </span>
             </div>
 
-            {/* Botón integrado en el overlay */}
+            {/* Boton integrado en el overlay */}
             <button
               className="w-full bg-white text-primary font-semibold py-2.5 rounded-lg hover:bg-white/90 transition-colors disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
-              disabled={book.stock === 0}
+              disabled={book.stock === 0 || isAdding}
+              onClick={handleAddToCart}
             >
-              {book.stock === 0 ? "Agotado" : "Agregar al carrito"}
+              {book.stock === 0
+                ? "Agotado"
+                : isAdding
+                ? "Agregado"
+                : "Agregar al carrito"}
             </button>
           </div>
         </div>
@@ -258,6 +287,17 @@ export const BookCardVariant4 = ({
   category,
   coverUrl,
 }: BookCardProps) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (book.stock === 0 || isAdding) return;
+    setIsAdding(true);
+    addToCart(book, 1);
+    setTimeout(() => setIsAdding(false), 500);
+  };
+
   return (
     <div className="group cursor-pointer">
       {/* Contenedor con padding para simular marco */}
@@ -276,7 +316,7 @@ export const BookCardVariant4 = ({
             </div>
           )}
 
-          {/* Badge de categoría con estilo minimalista */}
+          {/* Badge de categoria con estilo minimalista */}
           {category && (
             <div className="absolute top-2 left-2">
               <span className="text-xs font-medium text-gray-700 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md">
@@ -317,16 +357,23 @@ export const BookCardVariant4 = ({
             <span className="text-xs text-gray-500">Stock: {book.stock}</span>
           </div>
 
-          {/* Botón que cambia en hover */}
+          {/* Boton que cambia en hover */}
           <button
             className="w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50
                        bg-gray-100 text-gray-700 group-hover:bg-primary group-hover:text-white"
-            disabled={book.stock === 0}
+            disabled={book.stock === 0 || isAdding}
+            onClick={handleAddToCart}
           >
             <span className="group-hover:hidden">
-              {book.stock === 0 ? "Agotado" : "Ver detalles"}
+              {book.stock === 0 ? "Agotado" : isAdding ? "Agregado" : "Ver detalles"}
             </span>
-            <span className="hidden group-hover:inline">Agregar ahora ✓</span>
+            <span className="hidden group-hover:inline">
+              {book.stock === 0
+                ? "Sin stock"
+                : isAdding
+                ? "Agregado"
+                : "Agregar al carrito"}
+            </span>
           </button>
         </div>
       </div>
